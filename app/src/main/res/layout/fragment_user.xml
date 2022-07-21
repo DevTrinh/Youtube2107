@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/cl_contains_dialog_user"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/iv_x_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:padding="@dimen/dp12"
+        android:src="@drawable/ic_cancel"/>
+
+    <View
+        android:id="@+id/v_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp1"
+        app:layout_constraintTop_toBottomOf="@id/iv_x_user"
+        android:background="@drawable/shadow_line"
+        android:elevation="@dimen/dp22"/>
+
+    <ImageView
+        android:id="@+id/iv_user_sign_in"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp0"
+        app:layout_constraintTop_toBottomOf="@id/v_line"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:src="@drawable/iv_user_sign_in"
+        app:layout_constraintHeight_percent="0.2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.1"/>
+
+    <TextView
+        android:id="@+id/tv_des_user"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/iv_user_sign_in"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        android:text="@string/des_user_sigh_in"
+        android:textSize="@dimen/dp18"
+        android:textColor="@color/color51"
+        android:gravity="center"/>
+
+    <Button
+        android:id="@+id/bt_sign_in_user"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="@string/sign_in"
+        app:layout_constraintTop_toBottomOf="@id/tv_des_user"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHeight_percent="0.045"
+        android:layout_marginTop="@dimen/dp18"
+        android:background="@drawable/bg_bt_sign_in"
+        android:textColor="@color/white"/>
+
+    <View
+        android:id="@+id/line_bottom_bt_sign_in"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp0dot7"
+        app:layout_constraintTop_toBottomOf="@id/bt_sign_in_user"
+        android:layout_marginTop="@dimen/dp12"
+        android:background="@color/color51"/>
+
+    <ImageView
+        android:id="@+id/iv_setting_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/line_bottom_bt_sign_in"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:padding="@dimen/dp24"
+        android:layout_marginLeft="@dimen/dp12"
+        android:src="@drawable/ic_gear24"/>
+
+    <TextView
+        android:id="@+id/tv_setting_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/iv_setting_user"
+        app:layout_constraintTop_toTopOf="@id/iv_setting_user"
+        app:layout_constraintBottom_toBottomOf="@id/iv_setting_user"
+        android:text="@string/setting"
+        android:textSize="@dimen/dp18"
+        android:textColor="@color/black"/>
+
+    <ImageView
+        android:id="@+id/iv_help_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/iv_setting_user"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:padding="@dimen/dp24"
+        android:layout_marginLeft="@dimen/dp12"
+        android:src="@drawable/ic_help24"/>
+
+    <TextView
+        android:id="@+id/tv_help_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/iv_help_user"
+        app:layout_constraintTop_toTopOf="@id/iv_help_user"
+        app:layout_constraintBottom_toBottomOf="@id/iv_help_user"
+        android:text="@string/help"
+        android:textSize="@dimen/dp18"
+        android:textColor="@color/black"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_contains_bottom_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_help_user"
+        android:layout_marginTop="@dimen/dp24">
+
+        <TextView
+            android:id="@+id/tv_privacy_policy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="@dimen/dp12"
+            android:text="@string/privacy_policy"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dp12"/>
+
+        <View
+            android:id="@+id/view_dot"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            app:layout_constraintLeft_toRightOf="@id/tv_privacy_policy"
+            app:layout_constraintTop_toTopOf="@id/tv_privacy_policy"
+            app:layout_constraintBottom_toBottomOf="@id/tv_privacy_policy"
+            android:layout_marginLeft="@dimen/dp12"
+            android:background="@color/color51" />
+
+        <TextView
+            android:id="@+id/tv_terms_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/view_dot"
+            app:layout_constraintTop_toTopOf="@id/view_dot"
+            app:layout_constraintBottom_toBottomOf="@id/view_dot"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="@dimen/dp12"
+            android:text="@string/terms_of_service"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dp12"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
