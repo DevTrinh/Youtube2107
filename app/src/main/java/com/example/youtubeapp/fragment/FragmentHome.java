@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,18 +45,22 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import pl.droidsonroids.gif.GifImageView;
+
 
 public class FragmentHome extends Fragment implements InterfaceDefaultValue,
         SwipeRefreshLayout.OnRefreshListener {
     private SwipeRefreshLayout rfMain;
-    public static ArrayList<ItemVideoMain> listItemVideo = new ArrayList<>();
     private ProgressBar pbLoadListVideoMain;
-    public RecyclerView rvListVideoMain, rvListHotKeys;
+    private GifImageView ivLoadMore;
+
     public static AdapterListHotKeys adapterListHotKeys;
+    public RecyclerView rvListVideoMain, rvListHotKeys;
+    public static ArrayList<ItemVideoMain> listItemVideo = new ArrayList<>();
     public static AdapterMainVideoYoutube adapterMainVideoYoutube;
     public static String testUrlAvtChannel;
 
-    private static int positionStart = 0, positionEnd = 10;
+    private int positionStart = 0, positionEnd = 12;
     private Fragment fragment = this;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -67,6 +72,9 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
         View view = inflater.inflate(R.layout.fragment_home,
                 container, false);
         mapping(view);
+
+        ivLoadMore.setVisibility(View.GONE);
+
         pbLoadListVideoMain.setVisibility(View.VISIBLE);
 //        rfMain.setOnRefreshListener(this);
         LinearLayoutManager linearLayoutManager =
@@ -86,7 +94,9 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
         adapterListHotKeys.notifyDataSetChanged();
 
         getJsonApiYoutube(positionStart, positionEnd);
-        Toast.makeText(getContext(), "SIZE: "+listItemVideo.size(), Toast.LENGTH_SHORT).show();
+//        THIS IS CLEAR NOT LOAD AGAIN
+        listItemVideo.clear();
+//        Toast.makeText(getContext(), "SIZE: "+listItemVideo.size(), Toast.LENGTH_SHORT).show();
         adapterMainVideoYoutube = new AdapterMainVideoYoutube(listItemVideo,
                 new InterfaceClickFrame() {
                     @Override
@@ -140,10 +150,15 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
 
         rvListVideoMain.setAdapter(adapterMainVideoYoutube);
 
-        rvListVideoMain.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+        ivLoadMore.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                Toast.makeText(getContext(), "hihihi", Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+                ivLoadMore.setImageResource(R.drawable.gif_load_more);
+                positionStart = positionEnd;
+                positionEnd += 8;
+                ivLoadMore.setEnabled(false);
+                getJsonApiYoutube(positionStart, positionEnd);
+//                Log.d("LOAD DATA MORE: ", positionEnd+"");
             }
         });
 
@@ -152,13 +167,16 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
     }
 
     private void getJsonApiYoutube(int start, int end) {
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 API_YOUTUBE_MAIN_VIDEO, null,
                 new Response.Listener<JSONObject>() {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onResponse(JSONObject response) {
+                        int endItem = end;
+                        boolean isCheckLastItem = true;
+//                        Log.d("I'm Here !", endItem+"");
                         try {
                             String idVideo = "";
                             String titleVideo = "";
@@ -171,46 +189,55 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
                             String commentCount = "";
                             String description = "";
                             JSONArray jsonItems = response.getJSONArray(ITEMS);
-//                            Log.d("AAAAAAAAAAAAA", jsonItems.length() + "");
-                            for (int i = start; i < end; i++) {
-                                JSONObject jsonItem = jsonItems.getJSONObject(i);
-                                idVideo = jsonItem.getString(ID);
-//                                Log.d("ID: "+i, idVideo);
-                                JSONObject jsonSnippet = jsonItem.getJSONObject(SNIPPET);
-//                                Log.d("DESCRIPTION: ", jsonSnippet.getString("description"));
-                                description = jsonSnippet.getString(DESCRIPTION);
-                                titleVideo = jsonSnippet.getString(TITLE);
-//                                Log.d("Title: "+i, titleVideo);
-                                channelName = jsonSnippet.getString(CHANNEL_TITLE);
-//                                Log.d("Channel name "+i, channelName);
-                                publishedAt = formatTimeUpVideo(jsonSnippet
-                                        .getString(PUBLISHED_AT) + "");
-//                                Log.d(PUBLISHED_AT+i,publishedAt);
-                                idChannel = jsonSnippet.getString(CHANNEL_ID);
-//                                Log.d("ID CHANNEL "+i, idChannel);
-                                getInfoVideo(listItemVideo, idChannel, i);
-                                JSONObject jsonThumbnail = jsonSnippet.getJSONObject(THUMBNAIL);
-                                JSONObject jsonStandard = jsonThumbnail.getJSONObject(HIGH);
-                                urlThumbnail = jsonStandard.getString(URL);
-//                                Log.d("THUMBNAIL "+i, urlThumbnail);
-                                JSONObject jsonStatistics = jsonItem.getJSONObject(STATISTICS);
-                                viewCount = formatData(jsonStatistics.getInt(VIEW_COUNT)) + " views";
-//                                Log.d("View Count: "+i, viewCount);
-                                if (jsonStatistics.has(LIKED_COUNT)){
-                                    numberLiker = formatData(jsonStatistics.getInt(LIKED_COUNT));
-                                }
-//                                Log.d("Number like"+i,numberLiker);
-                                if (jsonStatistics.has(COMMENT_COUNT)) {
-                                    commentCount = formatData(Integer
-                                            .parseInt(jsonStatistics.getString(COMMENT_COUNT)));
-                                }
-//                                Log.d("Comment Count"+i, commentCount);
-                                listItemVideo.add(new ItemVideoMain(titleVideo,
-                                        urlThumbnail, idChannel, channelName,
-                                        viewCount, publishedAt, idVideo,
-                                        commentCount, numberLiker, description));
-                                pbLoadListVideoMain.setVisibility(View.GONE);
+//                          CHECK LOAD MORE
+                            if (endItem > jsonItems.length()){
+                                endItem = jsonItems.length();
+                                isCheckLastItem = false;
                             }
+                            if (start < endItem){
+//                                Log.d("LOAD MORE: ", end+"");
+//                            Log.d("AAAAAAAAAAAAA", jsonItems.length() + "");
+                                for (int i = start; i < endItem; i++) {
+                                    JSONObject jsonItem = jsonItems.getJSONObject(i);
+                                    idVideo = jsonItem.getString(ID);
+//                                Log.d("ID: "+i, idVideo);
+                                    JSONObject jsonSnippet = jsonItem.getJSONObject(SNIPPET);
+//                                Log.d("DESCRIPTION: ", jsonSnippet.getString("description"));
+                                    description = jsonSnippet.getString(DESCRIPTION);
+                                    titleVideo = jsonSnippet.getString(TITLE);
+//                                Log.d("Title: "+i, titleVideo);
+                                    channelName = jsonSnippet.getString(CHANNEL_TITLE);
+//                                Log.d("Channel name "+i, channelName);
+                                    publishedAt = formatTimeUpVideo(jsonSnippet
+                                            .getString(PUBLISHED_AT) + "");
+//                                Log.d(PUBLISHED_AT+i,publishedAt);
+                                    idChannel = jsonSnippet.getString(CHANNEL_ID);
+                                    getInfoVideo(listItemVideo, idChannel, i, isCheckLastItem);
+
+//                                Log.d("ID CHANNEL "+i, idChannel);
+                                    JSONObject jsonThumbnail = jsonSnippet.getJSONObject(THUMBNAIL);
+                                    JSONObject jsonStandard = jsonThumbnail.getJSONObject(HIGH);
+                                    urlThumbnail = jsonStandard.getString(URL);
+//                                Log.d("THUMBNAIL "+i, urlThumbnail);
+                                    JSONObject jsonStatistics = jsonItem.getJSONObject(STATISTICS);
+                                    viewCount = formatData(jsonStatistics.getInt(VIEW_COUNT)) + " views";
+//                                Log.d("View Count: "+i, viewCount);
+                                    if (jsonStatistics.has(LIKED_COUNT)){
+                                        numberLiker = formatData(jsonStatistics.getInt(LIKED_COUNT));
+                                    }
+//                                Log.d("Number like"+i,numberLiker);
+                                    if (jsonStatistics.has(COMMENT_COUNT)) {
+                                        commentCount = formatData(Integer
+                                                .parseInt(jsonStatistics.getString(COMMENT_COUNT)));
+                                    }
+//                                Log.d("Comment Count"+i, commentCount);
+                                    listItemVideo.add(new ItemVideoMain(titleVideo,
+                                            urlThumbnail, idChannel, channelName,
+                                            viewCount, publishedAt, idVideo,
+                                            commentCount, numberLiker, description));
+                                }
+                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -225,7 +252,7 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
     }
 
     //    GET INFO URL CHANNEL, AMOUNT SUBSCRIBE
-    public void getInfoVideo(ArrayList<ItemVideoMain> list, String ID_CHANNEL, int position) {
+    public void getInfoVideo(ArrayList<ItemVideoMain> list, String ID_CHANNEL, int position, boolean isLoad) {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 "https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2Cstatistics&id="
@@ -250,6 +277,16 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
 //                    Log.d("AAAAA " + position, urlChannel);
                     }
                     adapterMainVideoYoutube.notifyItemChanged(position);
+                    if (!isLoad){
+                        ivLoadMore.setVisibility(View.GONE);
+                    }
+                    else{
+                        ivLoadMore.setVisibility(View.VISIBLE);
+                        ivLoadMore.setImageResource(R.drawable.ic_arrow_down);
+                        ivLoadMore.setEnabled(true);
+                    }
+                    pbLoadListVideoMain.setVisibility(View.GONE);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -325,10 +362,12 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
     }
 
     public void mapping(@NonNull View view) {
+        ivLoadMore = view.findViewById(R.id.iv_load_more);
         rfMain = view.findViewById(R.id.rf_layout_main);
         pbLoadListVideoMain = view.findViewById(R.id.pb_load_list_video_main);
         rvListHotKeys = view.findViewById(R.id.lv_hot_keywords);
         rvListVideoMain = view.findViewById(R.id.rv_list_video_main);
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -341,7 +380,8 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
                 rfMain.setRefreshing(false);
             }
         },2000);
-        getJsonApiYoutube(positionEnd, positionEnd+5);
+        listItemVideo.clear();
+        getJsonApiYoutube(positionStart, positionEnd);
         adapterMainVideoYoutube.notifyDataSetChanged();
     }
 }

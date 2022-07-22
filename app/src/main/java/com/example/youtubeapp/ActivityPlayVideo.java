@@ -66,6 +66,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import pl.droidsonroids.gif.GifImageView;
 
 public class ActivityPlayVideo extends AppCompatActivity
         implements YouTubePlayer.OnInitializedListener, InterfaceDefaultValue {
@@ -85,28 +86,33 @@ public class ActivityPlayVideo extends AppCompatActivity
 
     private AdapterMainVideoYoutube adapterListVideoYoutube;
     private AdapterListComment adapterListComment;
+
     private AlertDialog.Builder alertDialog;
     private ProgressBar pbLoad, pbLoadComment;
     private CircleImageView ivUserComment;
     private EditText etUserComment;
     private ImageView ivLiked, ivDisliked, ivShare, ivDownload, ivSave,
             ivAvtChannel, ivClip, ivOpenDescription;
+    private GifImageView ivLoadMore, ivLoadMoreComment;
     private YouTubePlayer ypPlayItemClick;
     private CheckBox cbNotificationChannel;
     private RecyclerView rvListComment, rvListVideoPlay;
+
     public static ArrayList<ItemVideoMain> listPlayRelate = new ArrayList<>();
     private ArrayList<ItemComment> listComment = new ArrayList<>();
     private ArrayList<ItemComment> listCommentNextPage = new ArrayList<>();
     private YouTubePlayerFragment youTubePlayerFragment;
+
     private boolean numberLikeCheck = true;
 
     public static String id = "";
     public static String idChannel = "";
     public boolean isCommentCheck = false;
 
-    private static int totalComment = 0;
-    private static int positionStart = 0;
-    private static int positionEnd = positionStart + 10;
+    private int positionStart = 0;
+    private int positionEnd = 10;
+    private int positionStartCmt = 0;
+    private int positionEndCmt = 12;
 
     private String urlPresent = "https://www.youtube.com/watch?v=";
     private TextView tvTitleVideo, tvTimeUp, tvCountViews, tvCountLiked, tvNameChannel,
@@ -142,8 +148,10 @@ public class ActivityPlayVideo extends AppCompatActivity
         ItemValueSearch itemValueSearch = (ItemValueSearch)
                 getDataSearch.getSerializableExtra(VALUE_SEARCH);
 
-        listPlayRelate.clear();
+        ivLoadMore.setVisibility(View.GONE);
+        ivLoadMoreComment.setVisibility(View.GONE);
 
+        listPlayRelate.clear();
         if (itemValueSearch != null) {
             id = itemValueSearch.getIdVideo();
             tvTimeUp.setText(itemValueSearch.getTimeUp());
@@ -159,7 +167,7 @@ public class ActivityPlayVideo extends AppCompatActivity
             idChannel = itemValueSearch.getChannelId();
         } else {
             id = itemData.getIdVideo();
-            idChannel= itemData.getIdChannel();
+            idChannel = itemData.getIdChannel();
             tvTimeUp.setText(itemData.getTvTimeUp());
             tvTitleVideo.setText(itemData.getTvTitleVideo());
             tvCountViews.setText(itemData.getTvViewCount());
@@ -174,10 +182,10 @@ public class ActivityPlayVideo extends AppCompatActivity
 //            Log.d("DESCRIPTION:", itemData.getDescription()+"");
 
         }
-        Toast.makeText(this, "ID: "+idChannel, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "ID: " + idChannel, Toast.LENGTH_SHORT).show();
 //        Toast.makeText(this, "Comment", Toast.LENGTH_SHORT).show();
 
-        getVideoRelated(id);
+        getVideoRelated(id, positionStart, positionEnd);
 //       LAYOUT LIST COMMENT
         LinearLayoutManager linearLayoutComment = new LinearLayoutManager(this);
         rvListComment.setLayoutManager(linearLayoutComment);
@@ -240,14 +248,11 @@ public class ActivityPlayVideo extends AppCompatActivity
                 pbLoadComment.setVisibility(View.VISIBLE);
                 if (btSheetComment.getState() != BottomSheetBehavior.STATE_EXPANDED) {
                     btSheetComment.setState(BottomSheetBehavior.STATE_EXPANDED);
-                    if (totalComment <= positionEnd){
-                        positionEnd = totalComment - 1;
-                    }
-                    Toast.makeText(ActivityPlayVideo.this, "STATE_EXPANDED", Toast.LENGTH_SHORT).show();
-                    if (!isCommentCheck){
-                        Toast.makeText(ActivityPlayVideo.this, "hehe", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ActivityPlayVideo.this, "STATE_EXPANDED", Toast.LENGTH_SHORT).show();
+                    if (!isCommentCheck) {
+//                        Toast.makeText(ActivityPlayVideo.this, "hehe", Toast.LENGTH_SHORT).show();
                         listComment.clear();
-                        setDataComment(id, positionStart, positionEnd);
+                        setDataComment(id, positionStartCmt, positionEndCmt);
                         adapterListComment = new AdapterListComment(listComment);
                         rvListComment.setAdapter(adapterListComment);
                         isCommentCheck = true;
@@ -364,19 +369,45 @@ public class ActivityPlayVideo extends AppCompatActivity
         });
 //        Toast.makeText(this, id + "huhhuh", Toast.LENGTH_SHORT).show();
 //        ypPlayItemClick.loadVideo(id);
+
+
+//        LOAD MORE
+        ivLoadMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ivLoadMore.setImageResource(R.drawable.gif_load_more);
+                positionStart = positionEnd;
+                positionEnd += 8;
+                ivLoadMore.setEnabled(false);
+                getVideoRelated(id, positionStart, positionEnd);
+//                Log.d("LOAD DATA MORE: ", positionEnd+"");
+            }
+        });
+
+        ivLoadMoreComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ivLoadMoreComment.setImageResource(R.drawable.gif_load_more);
+                positionStartCmt = positionEndCmt;
+                positionEndCmt += 12;
+                ivLoadMoreComment.setEnabled(false);
+                setDataComment(id, positionStartCmt, positionEndCmt);
+//                Log.d("LOAD DATA MORE: ", positionEnd+"");
+            }
+        });
     }
 
-    public void intentDisplayChannel(String idChannel){
+    public void intentDisplayChannel(String idChannel) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(VALUE_CHANNEL_ID, idChannel);
         startActivity(intent);
     }
 
-    private void setDisplayDes(@NonNull BottomSheetBehavior btSheet){
+    private void setDisplayDes(@NonNull BottomSheetBehavior btSheet) {
         btSheet.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                switch (newState){
+                switch (newState) {
                     case BottomSheetBehavior.STATE_EXPANDED:
                         abContainsInfoVideo.setVisibility(View.GONE);
                         break;
@@ -391,14 +422,6 @@ public class ActivityPlayVideo extends AppCompatActivity
 
             }
         });
-    }
-
-    private void setReloadVideo(@NonNull ItemVideoMain idClick) {
-//        ypPlayItemClick.loadVideo(idClick.getIdVideo());
-        Intent refresh = new Intent(this, ActivityPlayVideo.class);
-        refresh.putExtra(VALUE_ITEM_VIDEO, idClick);
-        startActivity(refresh);//Start the same Activity
-        finish(); //finish Activity
     }
 
     private void setDescription() {
@@ -443,17 +466,19 @@ public class ActivityPlayVideo extends AppCompatActivity
 //                Toast.makeText(ActivityPlayVideo.this, idPlayListInItemVideo+"", Toast.LENGTH_SHORT).show();
     }
 
-    private void setDataComment(String idVideo, int positionStart, int positionEnd) {
+    private void setDataComment(String idVideo, int start, int end) {
         String API_LIST_COMMENT_VIDEO =
                 "https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=100&order=relevance&textFormat=plainText&videoId=" +
                         idVideo + "&key="
-                        +API_KEY +"&fbclid=IwAR3WPsV7YUhleTcSEzTMCEQKKqMokxOUqwFEO41ELUw0s7TVhUjmaSRmlAg";
+                        + API_KEY + "&fbclid=IwAR3WPsV7YUhleTcSEzTMCEQKKqMokxOUqwFEO41ELUw0s7TVhUjmaSRmlAg";
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 API_LIST_COMMENT_VIDEO, null, new Response.Listener<JSONObject>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(JSONObject response) {
+                int endItem = end;
+                boolean isCheckLastItem = true;
                 try {
                     String nameChannelComment = "";
                     String urlAvtChannelComment = "";
@@ -462,34 +487,48 @@ public class ActivityPlayVideo extends AppCompatActivity
                     String numberLikeComment = "";
                     String totalReplyCount = "";
                     JSONArray jsonItems = response.getJSONArray(ITEMS);
-                    totalComment = jsonItems.length();
-                    Log.d("AAAAAAAAAAAA", jsonItems.length() + "");
-                    for (int i = 0; i < 10; i++) {
-                        JSONObject jsonItem = jsonItems.getJSONObject(i);
+                    if (endItem > jsonItems.length()){
+                        endItem = jsonItems.length();
+                        isCheckLastItem = false;
+                    }
+                    Log.d("FALSE: "+endItem, isCheckLastItem +"");
+
+                    if (start < endItem){
+//                    Log.d("AAAAAAAAAAAA", jsonItems.length() + "");
+                        for (int i = start; i < endItem; i++) {
+                            JSONObject jsonItem = jsonItems.getJSONObject(i);
 //                        Log.d("AGUGUGUU", jsonItem.getString(ID));
-                        JSONObject jsonSnippet = jsonItem.getJSONObject(SNIPPET);
-                        totalReplyCount = jsonSnippet.getString(TOTAL_REPLY_COUNT);
+                            JSONObject jsonSnippet = jsonItem.getJSONObject(SNIPPET);
+                            totalReplyCount = jsonSnippet.getString(TOTAL_REPLY_COUNT);
 //                        Log.d(TOTAL_REPLY_COUNT + " "+ i, totalReplyCount+"");
-                        JSONObject jsonTopLevelComment = jsonSnippet.getJSONObject(TOP_LEVEL_COMMENT);
-                        JSONObject jsonSnippetSub = jsonTopLevelComment.getJSONObject(SNIPPET);
-                        contentComment = jsonSnippetSub.getString(TEXT_DISPLAY);
+                            JSONObject jsonTopLevelComment = jsonSnippet.getJSONObject(TOP_LEVEL_COMMENT);
+                            JSONObject jsonSnippetSub = jsonTopLevelComment.getJSONObject(SNIPPET);
+                            contentComment = jsonSnippetSub.getString(TEXT_DISPLAY);
 //                        Log.d(TEXT_DISPLAY+" "+i, contentComment);
-                        nameChannelComment = jsonSnippetSub.getString(AUTHOR_DISPLAY_NAME);
+                            nameChannelComment = jsonSnippetSub.getString(AUTHOR_DISPLAY_NAME);
 //                        Log.d(AUTHOR_DISPLAY_NAME+i, nameChannelComment);
-                        numberLikeComment = formatData(Integer.parseInt(jsonSnippetSub.getString(LIKED_COUNT)));
+                            numberLikeComment = formatData(Integer.parseInt(jsonSnippetSub.getString(LIKED_COUNT)));
 //                        Log.d(LIKED_COUNT+" "+i, numberLikeComment);
-                        timeComment = formatTimeUpVideo(jsonSnippetSub.getString(PUBLISHED_AT) + "");
+                            timeComment = formatTimeUpVideo(jsonSnippetSub.getString(PUBLISHED_AT) + "");
 //                        timeComment = jsonSnippetSub.getString(PUBLISHED_AT);
 //                        Log.d(PUBLISHED_AT + i, timeComment);
-                        urlAvtChannelComment = jsonSnippetSub.getString(AUTHOR_PROFILE_IMAGE_URL);
-                        Log.d(AUTHOR_PROFILE_IMAGE_URL + " " + i, urlAvtChannelComment);
-                        listComment.add(new ItemComment(nameChannelComment,
-                                urlAvtChannelComment, timeComment,
-                                contentComment, numberLikeComment,
-                                totalReplyCount));
-                        adapterListComment.notifyItemChanged(i);
+                            urlAvtChannelComment = jsonSnippetSub.getString(AUTHOR_PROFILE_IMAGE_URL);
+//                            Log.d(AUTHOR_PROFILE_IMAGE_URL + " " + i, urlAvtChannelComment);
+                            listComment.add(new ItemComment(nameChannelComment,
+                                    urlAvtChannelComment, timeComment,
+                                    contentComment, numberLikeComment,
+                                    totalReplyCount));
+                            if (!isCheckLastItem){
+                                ivLoadMore.setVisibility(View.GONE);
+                            }
+                            else{
+                                ivLoadMoreComment.setVisibility(View.VISIBLE);
+                                ivLoadMoreComment.setImageResource(R.drawable.ic_arrow_down);
+                                ivLoadMoreComment.setEnabled(true);
+                            }
+                            adapterListComment.notifyItemChanged(i);
+                        }
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -505,7 +544,7 @@ public class ActivityPlayVideo extends AppCompatActivity
     }
 
     // GET LIST VIDEO RELATED
-    private void getVideoRelated(String idRelated) {
+    private void getVideoRelated(String idRelated, int start, int end) {
         String API_RELATED_VIDEO = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&relatedToVideoId="
                 + idRelated + "&type=video&key=" + API_KEY + "";
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -516,6 +555,8 @@ public class ActivityPlayVideo extends AppCompatActivity
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onResponse(JSONObject response) {
+                        int endItem = end;
+                        boolean isCheckLastItem = true;
                         try {
                             JSONArray jsonItems = response.getJSONArray(ITEMS);
 //                            Log.d("LENGTHHHHHH", jsonItems.length() + "");
@@ -528,43 +569,50 @@ public class ActivityPlayVideo extends AppCompatActivity
                             String numberLiker = "";
                             String commentCount = "";
                             String description = "";
-                            int size = 0;
-                            for (int i = 0; i < 4; i++) {
-                                JSONObject jsonItem = jsonItems.getJSONObject(i);
-                                JSONObject jsonIdVideo = jsonItem.getJSONObject(ID);
-                                idVideo = jsonIdVideo.getString(ID_VIDEO);
+
+                            if (endItem > jsonItems.length()) {
+                                endItem = jsonItems.length();
+                                isCheckLastItem = false;
+                            }
+                            if (start < endItem) {
+                                int size = 0;
+                                for (int i = start; i < endItem; i++) {
+                                    JSONObject jsonItem = jsonItems.getJSONObject(i);
+                                    JSONObject jsonIdVideo = jsonItem.getJSONObject(ID);
+                                    idVideo = jsonIdVideo.getString(ID_VIDEO);
 //                        Log.d("ID", idVideo+"");
-                                if (jsonItem.has(SNIPPET)) {
-                                    getInfoVideo(idVideo, i - size, jsonItems.length() - size);
-                                    JSONObject jsonSnippet = jsonItem.getJSONObject(SNIPPET);
-                                    titleVideo = jsonSnippet.getString(TITLE);
+                                    if (jsonItem.has(SNIPPET)) {
+                                        getInfoVideo(idVideo, i - size, jsonItems.length() - size);
+                                        JSONObject jsonSnippet = jsonItem.getJSONObject(SNIPPET);
+                                        titleVideo = jsonSnippet.getString(TITLE);
 //                            Log.d("LOGGG"+i, titleVideo+"");
-                                    description = jsonSnippet.getString(DESCRIPTION);
+                                        description = jsonSnippet.getString(DESCRIPTION);
 //                                    Log.d(DESCRIPTION+" :", description);
-                                    idChannel = jsonSnippet.getString(CHANNEL_ID);
+                                        idChannel = jsonSnippet.getString(CHANNEL_ID);
 //                            Log.d("ID CHANNEL "+i, idChannel+"");
-                                    getInfoChannel(idChannel, i - size, jsonItems.length() - size);
-                                    JSONObject jsonThumbnail = jsonSnippet.getJSONObject(THUMBNAIL);
-                                    JSONObject jsonHighImg = jsonThumbnail.getJSONObject(HIGH);
-                                    urlThumbnail = jsonHighImg.getString(URL);
+                                        getInfoChannel(idChannel, i - size, jsonItems.length() - size, isCheckLastItem);
+                                        JSONObject jsonThumbnail = jsonSnippet.getJSONObject(THUMBNAIL);
+                                        JSONObject jsonHighImg = jsonThumbnail.getJSONObject(HIGH);
+                                        urlThumbnail = jsonHighImg.getString(URL);
 //                            Log.d("IMAGE "+i, urlThumbnail);
-                                    channelName = jsonSnippet.getString(CHANNEL_TITLE);
+                                        channelName = jsonSnippet.getString(CHANNEL_TITLE);
 //                                    Log.d("CHANNEL NAME: " + i, channelName + "");
-                                    publishedAt = formatTimeUpVideo(jsonSnippet
-                                            .getString(PUBLISHED_AT) + "");
+                                        publishedAt = formatTimeUpVideo(jsonSnippet
+                                                .getString(PUBLISHED_AT) + "");
 //                                    Log.d(PUBLISHED_AT, publishedAt + "");
 //                            Log.d("JSON STATICS: ", listViewer.size()+"")
-                                } else {
-                                    size++;
-                                    continue;
+                                    } else {
+                                        size++;
+                                        continue;
+                                    }
+                                    listPlayRelate.add(new ItemVideoMain(titleVideo,
+                                            urlThumbnail, idChannel,
+                                            channelName, publishedAt,
+                                            idVideo, commentCount,
+                                            numberLiker, description));
                                 }
-                                listPlayRelate.add(new ItemVideoMain(titleVideo,
-                                        urlThumbnail, idChannel,
-                                        channelName, publishedAt,
-                                        idVideo, commentCount,
-                                        numberLiker, description));
-                                pbLoad.setVisibility(View.GONE);
                             }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -585,7 +633,7 @@ public class ActivityPlayVideo extends AppCompatActivity
     }
 
     //    GET INFO CHANNEL (URL avt, SubScribe, amount Comment)
-    private void getInfoChannel(String ID_CHANNEL, int position, int size) {
+    private void getInfoChannel(String ID_CHANNEL, int position, int size, boolean isLoad) {
         if (position < size) {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
@@ -611,6 +659,14 @@ public class ActivityPlayVideo extends AppCompatActivity
 //                    Log.d("AAAAA " + position, urlChannel);
                         }
                         adapterListVideoYoutube.notifyItemChanged(position);
+                        if (!isLoad) {
+                            ivLoadMore.setVisibility(View.GONE);
+                        } else {
+                            ivLoadMore.setVisibility(View.VISIBLE);
+                            ivLoadMore.setImageResource(R.drawable.ic_arrow_down);
+                            ivLoadMore.setEnabled(true);
+                        }
+                        pbLoad.setVisibility(View.GONE);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -655,6 +711,7 @@ public class ActivityPlayVideo extends AppCompatActivity
                             listPlayRelate.get(position).setTvCommentCount("Video does not support comments");
                         }
                         adapterListVideoYoutube.notifyItemChanged(position);
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -681,6 +738,7 @@ public class ActivityPlayVideo extends AppCompatActivity
     }
 
     private void mapping() {
+        ivLoadMore = findViewById(R.id.iv_arrow_load_more);
         bottomSheetDescription = findViewById(R.id.lo_view_description);
         ivShare = findViewById(R.id.iv_share_play_video);
         pbLoad = findViewById(R.id.pb_load_video_related);
@@ -710,6 +768,7 @@ public class ActivityPlayVideo extends AppCompatActivity
         bottomSheetComment = findViewById(R.id.ll_contains_comment_list);
         rvListComment = findViewById(R.id.rv_list_comment_video);
         pbLoadComment = findViewById(R.id.pb_comment_load);
+        ivLoadMoreComment = findViewById(R.id.iv_arrow_load_more_comment);
     }
 
     public void clickChannel(View view) {
@@ -754,13 +813,12 @@ public class ActivityPlayVideo extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (btDescription.getState() == BottomSheetBehavior.STATE_EXPANDED){
+        if (btDescription.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             btDescription.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        }
-        else if (btSheetComment.getState() == BottomSheetBehavior.STATE_EXPANDED){
+            ivLoadMoreComment.setVisibility(View.GONE);
+        } else if (btSheetComment.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             btSheetComment.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        }
-        else{
+        } else {
             super.onBackPressed();
             finish();
         }

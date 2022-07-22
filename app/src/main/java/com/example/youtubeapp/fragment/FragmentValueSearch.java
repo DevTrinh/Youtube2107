@@ -46,16 +46,22 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import pl.droidsonroids.gif.GifImageView;
+
 public class FragmentValueSearch extends Fragment implements InterfaceDefaultValue {
     private static RecyclerView rvListValueSearch;
     private static AdapterValueSearchF adapterValueSearch;
-    public static ArrayList<ItemValueSearch> listValueSearch = new ArrayList<>();
     private EditText etSearch;
     private ImageView backSearch;
+    private GifImageView ivLoadMore;
     private ProgressBar pbLoad;
     private String API_SEARCH = "";
+
     private Intent intentSearchToPlayVideo;
-    public static final String EXTRA_DATA = "EXTRA_DATA";
+
+    public static ArrayList<ItemValueSearch> listValueSearch = new ArrayList<>();
+
+    private int positionStart = 0, positionEnd = 12;
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
@@ -70,10 +76,12 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
         API_SEARCH = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&q="
                 + valueSearch + "&key=" + API_KEY + "";
         mapping(view);
+
+        ivLoadMore.setVisibility(View.GONE);
         pbLoad.setVisibility(View.VISIBLE);
         listValueSearch.clear();
         etSearch.setText(valueSearch);
-        getJsonValueSearch(API_SEARCH);
+        getJsonValueSearch(API_SEARCH, positionStart, positionEnd);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvListValueSearch.setLayoutManager(linearLayoutManager);
 //        Toast.makeText(getContext(), listValueSearch.size()
@@ -82,7 +90,7 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
                 new InterfaceClickFrame() {
                     @Override
                     public void onClickTitle(int position) {
-                        if (listValueSearch.get(position).getKind().equals(KIND_VIDEO)){
+                        if (listValueSearch.get(position).getKind().equals(KIND_VIDEO)) {
                             /*IMAGEVIEW ONCLICK*/
                             Log.d("TITLE ON CLICK: " + position,
                                     listValueSearch.get(position).getTitle());
@@ -126,11 +134,12 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
                     @Override
                     public void onClickContains(int position) {
 //                        SWITCH OVER FRAGMENT SEARCH
-                       displayChannel(position);
+                        displayChannel(position);
                     }
                 }, getContext());
 
         rvListValueSearch.setAdapter(adapterValueSearch);
+
 //        CLICK X IN etSearch
         etSearch.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -140,7 +149,7 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
                     if (event.getRawX() >= (etSearch.getRight()
                             - etSearch.getCompoundDrawables()[DRAWABLE_RIGHT]
                             .getBounds().width())) {
-                        ActivitySearchVideo.etSearch.setText("");
+                        etSearch.setText("");
                         backSearch();
                         return true;
                     }
@@ -162,11 +171,11 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
                 backSearch();
             }
         });
-        Toast.makeText(getContext(), getActivity().getSupportFragmentManager().getBackStackEntryCount()+"", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getActivity().getSupportFragmentManager().getBackStackEntryCount() + "", Toast.LENGTH_SHORT).show();
         return view;
     }
 
-    private void displayChannel(int position){
+    private void displayChannel(int position) {
         FragmentTransaction fragmentTransaction =
                 getActivity().getSupportFragmentManager().beginTransaction();
         FragmentChannel fragmentChannel = new FragmentChannel(listValueSearch.get(position).getChannelId());
@@ -176,9 +185,9 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
         fragmentTransaction.commit();
     }
 
-    private void getAmountList(String idList, int position){
+    private void getAmountList(String idList, int position) {
         String URL = "https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId="
-                + idList+"&key="+API_KEY;
+                + idList + "&key=" + API_KEY;
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 URL, null, new Response.Listener<JSONObject>() {
@@ -198,52 +207,58 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(), error+"", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), error + "", Toast.LENGTH_SHORT).show();
             }
         });
         requestQueue.add(jsonObjectRequest);
     }
 
-    private void getInfoChannel(String ID_CHANNEL, int position, int size) {
-        if (position < size) {
-            RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                    "https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2Cstatistics&id="
-                            + ID_CHANNEL + "&key=" + API_KEY + "",
-                    null, new Response.Listener<JSONObject>() {
-                public void onResponse(JSONObject response) {
-                    try {
-                        JSONArray jsonItems = response.getJSONArray(ITEMS);
-                        JSONObject jsonItem = jsonItems.getJSONObject(0);
-                        JSONObject jsonSnippet = jsonItem.getJSONObject(SNIPPET);
-                        JSONObject jsonThumbnail = jsonSnippet.getJSONObject(THUMBNAIL);
-                        JSONObject jsonHigh = jsonThumbnail.getJSONObject(HIGH);
-                        if (jsonThumbnail.has(HIGH)) {
-                            listValueSearch.get(position).setUrlAvtChannel(jsonHigh.getString(URL) + "");
+    private void getInfoChannel(String ID_CHANNEL, int position, boolean isLoad) {
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
+                "https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2Cstatistics&id="
+                        + ID_CHANNEL + "&key=" + API_KEY + "",
+                null, new Response.Listener<JSONObject>() {
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray jsonItems = response.getJSONArray(ITEMS);
+                    JSONObject jsonItem = jsonItems.getJSONObject(0);
+                    JSONObject jsonSnippet = jsonItem.getJSONObject(SNIPPET);
+                    JSONObject jsonThumbnail = jsonSnippet.getJSONObject(THUMBNAIL);
+                    JSONObject jsonHigh = jsonThumbnail.getJSONObject(HIGH);
+                    if (jsonThumbnail.has(HIGH)) {
+                        listValueSearch.get(position).setUrlAvtChannel(jsonHigh.getString(URL) + "");
 //                            Log.d("LINKKKKKKKK " + position, jsonHigh.getString(URL));
-                        }
-                        JSONObject jsonStatics = jsonItem.getJSONObject(STATISTICS);
-                        if (jsonStatics.has(SUBSCRIBE_COUNT)) {
-                            listValueSearch.get(position).setNumberSubscribe
-                                    (formatData(Integer.parseInt
-                                            (jsonStatics.getString(SUBSCRIBE_COUNT)))
-                                            + " Subscribers");
-//                    Log.d("AAAAA " + position, urlChannel);
-                        }
-
-                        adapterValueSearch.notifyItemChanged(position);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
+                    JSONObject jsonStatics = jsonItem.getJSONObject(STATISTICS);
+                    if (jsonStatics.has(SUBSCRIBE_COUNT)) {
+                        listValueSearch.get(position).setNumberSubscribe
+                                (formatData(Integer.parseInt
+                                        (jsonStatics.getString(SUBSCRIBE_COUNT)))
+                                        + " Subscribers");
+//                    Log.d("AAAAA " + position, urlChannel);
+                    }
+
+                    adapterValueSearch.notifyItemChanged(position);
+                    if (!isLoad){
+                        ivLoadMore.setVisibility(View.GONE);
+                    }
+                    else{
+                        ivLoadMore.setVisibility(View.VISIBLE);
+                        ivLoadMore.setImageResource(R.drawable.ic_arrow_down);
+                        ivLoadMore.setEnabled(true);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            }, new Response.ErrorListener() {
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getContext(), "FALSE GET URL AVT CHANNEL",
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
-            requestQueue.add(jsonObjectRequest);
-        }
+            }
+        }, new Response.ErrorListener() {
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(), "FALSE GET URL AVT CHANNEL",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+        requestQueue.add(jsonObjectRequest);
     }
 
     private void backSearch() {
@@ -252,13 +267,15 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
         Toast.makeText(getActivity(), "BACK", Toast.LENGTH_SHORT).show();
     }
 
-    private void getJsonValueSearch(String API_SEARCH) {
+    private void getJsonValueSearch(String API_SEARCH, int start, int end) {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 API_SEARCH, null, new Response.Listener<JSONObject>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(JSONObject response) {
+                int endItem = end;
+                boolean isCheckLastItem = true;
                 try {
                     String idVideo = "";
                     String timeUp = "";
@@ -274,89 +291,96 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
                     JSONArray jsonItems = response.getJSONArray(ITEMS);
                     Log.d("JSON ITEMS: ", jsonItems.length() + "");
 
-                    int size = 0;
-                    for (int i = 0; i < jsonItems.length(); i++) {
-                        JSONObject jsonItem = jsonItems.getJSONObject(i);
-                        JSONObject jsonId = jsonItem.getJSONObject(ID);
-                        kindSearch = jsonId.getString(KIND);
-                        Log.d("KINDDDD", kindSearch);
-
-                        if (kindSearch.equals(KIND_VIDEO)){
-                            idVideo = jsonId.getString(ID_VIDEO);
-//                            Log.d("VIDEO ID: "+i, idVideo);
-                            JSONObject jsonSnippet = jsonItem.getJSONObject(SNIPPET);
-//                            Log.d("JSON SNIPPET: "+i,FragmentHome.formatTimeUpVideo(jsonSnippet.getString(PUBLISHED_AT)));
-                            timeUp = FragmentHome.formatTimeUpVideo(jsonSnippet.getString(PUBLISHED_AT));
-                            channelId = jsonSnippet.getString(CHANNEL_ID);
-//                            Log.d("CHANNEL ID: "+i, channelId);
-                            getInfoChannel(channelId, i, jsonItems.length());
-                            titleVideo = jsonSnippet.getString(TITLE);
-//                            Log.d("TITLE CHANNEL: "+i, titleVideo);
-                            descriptionVideo = jsonSnippet.getString(DESCRIPTION);
-                            JSONObject jsonThumbnails = jsonSnippet.getJSONObject(THUMBNAIL);
-                            JSONObject jsonHigh = jsonThumbnails.getJSONObject(HIGH);
-                            urlImage = jsonHigh.getString(URL);
-//                            Log.d("URL IMAGE: " + i, urlImage);
-                            channelTitle = jsonSnippet.getString(CHANNEL_TITLE);
-//                            Log.d("CHANNEL TITLE: "+i, channelTitle);
-                            viewCount = "1.5M views";
-//                            Log.d("ID CHANNEL: "+i, channelId);
-                            listValueSearch.add(new ItemValueSearch(kindSearch,idVideo,
-                                    timeUp, channelId, titleVideo,
-                                    descriptionVideo, urlImage,
-                                    channelTitle, viewCount, idListVideo));
-                        }
-
-                        if (kindSearch.equals(KIND_LIST)){
-                            idListVideo = jsonId.getString(PLAY_LIST_ID);
-//                            Log.d("LISTTTTTTTTTTTTTTTT", idListVideo);
-                            getAmountList(idListVideo, i);
-//                            Toast.makeText(getContext(), "HAHAHAHAHA", Toast.LENGTH_SHORT).show();
-                            JSONObject jsonSnippet = jsonItem.getJSONObject(SNIPPET);
-//                            Log.d("JSON SNIPPET: "+i,FragmentHome.formatTimeUpVideo(jsonSnippet.getString(PUBLISHED_AT)));
-                            timeUp = FragmentHome.formatTimeUpVideo(jsonSnippet.getString(PUBLISHED_AT));
-                            channelId = jsonSnippet.getString(CHANNEL_ID);
-//                            Log.d("CHANNEL ID: "+i, channelId);
-                            getInfoChannel(channelId, i - size, jsonItems.length());
-                            titleVideo = jsonSnippet.getString(TITLE);
-//                            Log.d("TITLE CHANNEL: "+i, titleVideo);
-                            descriptionVideo = jsonSnippet.getString(DESCRIPTION);
-                            JSONObject jsonThumbnails = jsonSnippet.getJSONObject(THUMBNAIL);
-                            JSONObject jsonHigh = jsonThumbnails.getJSONObject(HIGH);
-                            urlImage = jsonHigh.getString(URL);
-//                            Log.d("URL IMAGE: " + i, urlImage);
-                            channelTitle = jsonSnippet.getString(CHANNEL_TITLE);
-
-                            listValueSearch.add(new ItemValueSearch(kindSearch,idVideo,
-                                    timeUp, channelId, titleVideo,
-                                    descriptionVideo, urlImage,
-                                    channelTitle, viewCount, idListVideo));
-                        }
-
-                        if (kindSearch.equals(KIND_CHANNEL)){
-
-//                            Toast.makeText(getContext(), "HAHAHAHAHA", Toast.LENGTH_SHORT).show();
-                            JSONObject jsonSnippet = jsonItem.getJSONObject(SNIPPET);
-//                            Log.d("JSON SNIPPET: "+i,FragmentHome.formatTimeUpVideo(jsonSnippet.getString(PUBLISHED_AT)));
-                            timeUp = FragmentHome.formatTimeUpVideo(jsonSnippet.getString(PUBLISHED_AT));
-                            channelId = jsonSnippet.getString(CHANNEL_ID);
-//                            Log.d("CHANNEL ID: "+i, channelId);
-                            getInfoChannel(channelId, i - size, jsonItems.length());
-                            titleVideo = jsonSnippet.getString(TITLE);
-//                            Log.d("TITLE CHANNEL: "+i, titleVideo);
-                            descriptionVideo = jsonSnippet.getString(DESCRIPTION);
-                            JSONObject jsonThumbnails = jsonSnippet.getJSONObject(THUMBNAIL);
-                            JSONObject jsonHigh = jsonThumbnails.getJSONObject(HIGH);
-                            urlImage = jsonHigh.getString(URL);
-                            Log.d("URL IMAGE: " + i, urlImage);
-                            channelTitle = jsonSnippet.getString(CHANNEL_TITLE);
-                            listValueSearch.add(new ItemValueSearch(kindSearch,idVideo,
-                                    timeUp, channelId, titleVideo,
-                                    descriptionVideo, urlImage,
-                                    channelTitle, viewCount, idListVideo));
-                        }
-                        pbLoad.setVisibility(View.GONE);
+//                          CHECK LOAD MORE
+                    if (endItem > jsonItems.length()) {
+                        endItem = jsonItems.length();
+                        isCheckLastItem = false;
                     }
+                    if (start < endItem) {
+                        for (int i = start; i < endItem; i++) {
+                            JSONObject jsonItem = jsonItems.getJSONObject(i);
+                            JSONObject jsonId = jsonItem.getJSONObject(ID);
+                            kindSearch = jsonId.getString(KIND);
+                            Log.d("KINDDDD", kindSearch);
+
+                            if (kindSearch.equals(KIND_VIDEO)) {
+                                idVideo = jsonId.getString(ID_VIDEO);
+//                            Log.d("VIDEO ID: "+i, idVideo);
+                                JSONObject jsonSnippet = jsonItem.getJSONObject(SNIPPET);
+//                            Log.d("JSON SNIPPET: "+i,FragmentHome.formatTimeUpVideo(jsonSnippet.getString(PUBLISHED_AT)));
+                                timeUp = FragmentHome.formatTimeUpVideo(jsonSnippet.getString(PUBLISHED_AT));
+                                channelId = jsonSnippet.getString(CHANNEL_ID);
+//                            Log.d("CHANNEL ID: "+i, channelId);
+                                getInfoChannel(channelId, i, isCheckLastItem );
+                                titleVideo = jsonSnippet.getString(TITLE);
+//                            Log.d("TITLE CHANNEL: "+i, titleVideo);
+                                descriptionVideo = jsonSnippet.getString(DESCRIPTION);
+                                JSONObject jsonThumbnails = jsonSnippet.getJSONObject(THUMBNAIL);
+                                JSONObject jsonHigh = jsonThumbnails.getJSONObject(HIGH);
+                                urlImage = jsonHigh.getString(URL);
+//                            Log.d("URL IMAGE: " + i, urlImage);
+                                channelTitle = jsonSnippet.getString(CHANNEL_TITLE);
+//                            Log.d("CHANNEL TITLE: "+i, channelTitle);
+                                viewCount = "1.5M views";
+//                            Log.d("ID CHANNEL: "+i, channelId);
+                                listValueSearch.add(new ItemValueSearch(kindSearch, idVideo,
+                                        timeUp, channelId, titleVideo,
+                                        descriptionVideo, urlImage,
+                                        channelTitle, viewCount, idListVideo));
+                            }
+
+                            if (kindSearch.equals(KIND_LIST)) {
+                                idListVideo = jsonId.getString(PLAY_LIST_ID);
+//                            Log.d("LISTTTTTTTTTTTTTTTT", idListVideo);
+                                getAmountList(idListVideo, i);
+//                            Toast.makeText(getContext(), "HAHAHAHAHA", Toast.LENGTH_SHORT).show();
+                                JSONObject jsonSnippet = jsonItem.getJSONObject(SNIPPET);
+//                            Log.d("JSON SNIPPET: "+i,FragmentHome.formatTimeUpVideo(jsonSnippet.getString(PUBLISHED_AT)));
+                                timeUp = FragmentHome.formatTimeUpVideo(jsonSnippet.getString(PUBLISHED_AT));
+                                channelId = jsonSnippet.getString(CHANNEL_ID);
+//                            Log.d("CHANNEL ID: "+i, channelId);
+                                getInfoChannel(channelId, i, isCheckLastItem);
+                                titleVideo = jsonSnippet.getString(TITLE);
+//                            Log.d("TITLE CHANNEL: "+i, titleVideo);
+                                descriptionVideo = jsonSnippet.getString(DESCRIPTION);
+                                JSONObject jsonThumbnails = jsonSnippet.getJSONObject(THUMBNAIL);
+                                JSONObject jsonHigh = jsonThumbnails.getJSONObject(HIGH);
+                                urlImage = jsonHigh.getString(URL);
+//                            Log.d("URL IMAGE: " + i, urlImage);
+                                channelTitle = jsonSnippet.getString(CHANNEL_TITLE);
+
+                                listValueSearch.add(new ItemValueSearch(kindSearch, idVideo,
+                                        timeUp, channelId, titleVideo,
+                                        descriptionVideo, urlImage,
+                                        channelTitle, viewCount, idListVideo));
+                            }
+
+                            if (kindSearch.equals(KIND_CHANNEL)) {
+
+//                            Toast.makeText(getContext(), "HAHAHAHAHA", Toast.LENGTH_SHORT).show();
+                                JSONObject jsonSnippet = jsonItem.getJSONObject(SNIPPET);
+//                            Log.d("JSON SNIPPET: "+i,FragmentHome.formatTimeUpVideo(jsonSnippet.getString(PUBLISHED_AT)));
+                                timeUp = FragmentHome.formatTimeUpVideo(jsonSnippet.getString(PUBLISHED_AT));
+                                channelId = jsonSnippet.getString(CHANNEL_ID);
+//                            Log.d("CHANNEL ID: "+i, channelId);
+                                getInfoChannel(channelId, i, isCheckLastItem);
+                                titleVideo = jsonSnippet.getString(TITLE);
+//                            Log.d("TITLE CHANNEL: "+i, titleVideo);
+                                descriptionVideo = jsonSnippet.getString(DESCRIPTION);
+                                JSONObject jsonThumbnails = jsonSnippet.getJSONObject(THUMBNAIL);
+                                JSONObject jsonHigh = jsonThumbnails.getJSONObject(HIGH);
+                                urlImage = jsonHigh.getString(URL);
+//                                Log.d("URL IMAGE: " + i, urlImage);
+                                channelTitle = jsonSnippet.getString(CHANNEL_TITLE);
+                                listValueSearch.add(new ItemValueSearch(kindSearch, idVideo,
+                                        timeUp, channelId, titleVideo,
+                                        descriptionVideo, urlImage,
+                                        channelTitle, viewCount, idListVideo));
+                            }
+                            pbLoad.setVisibility(View.GONE);
+                        }
+                    }
+
                 } catch (JSONException ignored) {
 
                 }
@@ -374,6 +398,7 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
     }
 
     public void mapping(@NonNull View view) {
+        ivLoadMore = view.findViewById(R.id.iv_load_more_search);
         pbLoad = view.findViewById(R.id.pb_load_video_search);
         backSearch = view.findViewById(R.id.iv_back_after_search);
         rvListValueSearch = view.findViewById(R.id.rv_list_value_search);

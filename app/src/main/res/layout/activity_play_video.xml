@@ -447,7 +447,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"/>
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintVertical_bias="0"/>
 
                 <ProgressBar
                     android:id="@+id/pb_load_video_related"
@@ -457,6 +458,16 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <pl.droidsonroids.gif.GifImageView
+                    android:id="@+id/iv_arrow_load_more"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp40"
+                    app:layout_constraintTop_toBottomOf="@id/rv_list_play_video"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:paddingVertical="@dimen/dp12"
+                    android:src="@drawable/ic_arrow_down"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

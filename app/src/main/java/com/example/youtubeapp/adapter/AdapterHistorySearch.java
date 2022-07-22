@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtubeapp.R;
@@ -42,6 +43,7 @@ public class AdapterHistorySearch extends RecyclerView.Adapter<AdapterHistorySea
             return;
         }
         holder.tvItemHistory.setText(itemSearch.getString());
+
         holder.ivArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,6 +57,13 @@ public class AdapterHistorySearch extends RecyclerView.Adapter<AdapterHistorySea
                 interfaceClickSearch.onClickTextHistory(position);
             }
         });
+
+        holder.clSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                interfaceClickSearch.onCLickFrameItem(position);
+            }
+        });
     }
 
     @Override
@@ -66,11 +75,12 @@ public class AdapterHistorySearch extends RecyclerView.Adapter<AdapterHistorySea
     }
 
     public class SearchViewHolder extends RecyclerView.ViewHolder{
-
         private TextView tvItemHistory;
         private ImageView ivArrow;
+        private ConstraintLayout clSearch;
         public SearchViewHolder(@NonNull View itemView) {
             super(itemView);
+            clSearch = itemView.findViewById(R.id.cl_contains_item_search);
             ivArrow = itemView.findViewById(R.id.iv_arrow_search);
             tvItemHistory = itemView.findViewById(R.id.tv_suggest);
         }

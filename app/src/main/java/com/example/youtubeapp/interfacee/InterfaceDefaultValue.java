@@ -2,11 +2,11 @@ package com.example.youtubeapp.interfacee;
 
 public interface InterfaceDefaultValue {
     //    String API_YOUTUBE_MAIN_VIDEO_VN = "https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=50&regionCode=VN&key=AIzaSyDA2oRYCsTyVd6u5y1ypfda19b-fQZ_7VQ";
-    String API_YOUTUBE_MAIN_VIDEO = "https://youtube.googleapis.com/youtube/v3/videos?part=id&part=liveStreamingDetails&part=snippet&part=statistics&chart=mostPopular&maxResults=50&key=AIzaSyBhlkaNXxH5t8NbYcMHxsOhp28Kx91WQ4s";
+    String API_YOUTUBE_MAIN_VIDEO = "https://youtube.googleapis.com/youtube/v3/videos?part=id&part=liveStreamingDetails&part=snippet&part=statistics&chart=mostPopular&maxResults=50&key=AIzaSyAN3o3G8211upacI-bqmFmK057oi6UDA24";
     String API_IMAGE_CHANNEL_YOUTUBE = "https://www.googleapis.com/youtube/v3/channels?part=snippet&id=UCwppdrjsBPAZg5_cUwQjfMQ&fields=items%2Fsnippet%2Fthumbnails&key=AIzaSyDA2oRYCsTyVd6u5y1ypfda19b-fQZ_7VQ";
     //    String infovideo  ... https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&maxResults=100&videoId=_VB39Jo8mAQ&key=AIzaSyDA2oRYCsTyVd6u5y1ypfda19b-fQZ_7VQ
     String API_YOUTUBE_EXPLORE = "https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=50&regionCode=VN&key=AIzaSyDA2oRYCsTyVd6u5y1ypfda19b-fQZ_7VQ";
-    String API_KEY = "AIzaSyBhlkaNXxH5t8NbYcMHxsOhp28Kx91WQ4s";
+    String API_KEY = "AIzaSyAN3o3G8211upacI-bqmFmK057oi6UDA24";
     String LIST_SEARCH = "https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=PL5uqQAwS_KDjAgLGiaCakwJV1f4vRnTLS&key=";
     String popular_video_inChannel = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCs2BlNkzS04Uj_qSSYEoIWA&maxResults=50&order=viewCount&key=";
 
@@ -30,6 +30,8 @@ public interface InterfaceDefaultValue {
     String CONTENT_DETAILS = "contentDetails";
     String RELATED_PLAY_LIST = "relatedPlaylists";
     String UPLOADS  = "uploads";
+
+    String SUGGESTIONS = "suggestions";
 
     int REQUEST_ID_CHANNEL = 0x9345;
 

@@ -85,12 +85,22 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_list_value_search"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/cl_nav_after_search"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:background="@color/bg_et_search"/>
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/iv_load_more_search"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp40"
+        app:layout_constraintTop_toBottomOf="@id/rv_list_value_search"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:paddingVertical="@dimen/dp12"
+        android:src="@drawable/ic_arrow_down"/>
+
 
     <ProgressBar
         android:id="@+id/pb_load_video_search"
