@@ -41,7 +41,7 @@ public class AdapterListHotKeys extends
     public void onBindViewHolder(@NonNull ItemHotKeyViewHolder holder,
                                  @SuppressLint("RecyclerView") int position) {
         String value = listKey.get(position);
-        if (position == 0){
+        if (position == 0) {
             holder.tvKeyWords.setBackgroundResource(R.drawable.bg_on_selected_key);
             holder.tvKeyWords.setTextColor(Color.WHITE);
         }

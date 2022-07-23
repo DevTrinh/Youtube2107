@@ -30,7 +30,7 @@ public class AdapterListComment extends
     @Override
     public ListCommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_comment_video,parent, false);
+                .inflate(R.layout.item_comment_video, parent, false);
         return new ListCommentViewHolder(view);
     }
 
@@ -38,7 +38,7 @@ public class AdapterListComment extends
     @Override
     public void onBindViewHolder(@NonNull ListCommentViewHolder holder, int position) {
         ItemComment itemComment = listComment.get(position);
-        if (itemComment == null){
+        if (itemComment == null) {
             return;
         }
         Picasso.get().load(itemComment.getUrlAvtChannelComment()).into(holder.ivAvtItemComment);
@@ -46,23 +46,22 @@ public class AdapterListComment extends
         holder.tvTimeAgoComment.setText(itemComment.getTimeComment());
         holder.tvContentComment.setText(itemComment.getContentComment());
         holder.tvNumberLikeComment.setText(itemComment.getNumberLikeComment());
-        if (itemComment.getReplyComment().equals("0")){
+        if (itemComment.getReplyComment().equals("0")) {
             holder.tvReplyComment.setText("");
-        }
-        else{
+        } else {
             holder.tvReplyComment.setText(itemComment.getReplyComment() + " REPLIES");
         }
     }
 
     @Override
     public int getItemCount() {
-        if (listComment != null){
+        if (listComment != null) {
             return listComment.size();
         }
         return 0;
     }
 
-    public class ListCommentViewHolder extends RecyclerView.ViewHolder{
+    public class ListCommentViewHolder extends RecyclerView.ViewHolder {
 
         private CircleImageView ivAvtItemComment;
         private TextView tvItemNameChannel, tvTimeAgoComment,
@@ -73,7 +72,7 @@ public class AdapterListComment extends
             mapping(itemView);
         }
 
-        public void mapping(@NonNull View view){
+        public void mapping(@NonNull View view) {
             ivAvtItemComment = view.findViewById(R.id.iv_item_avt_comment);
             tvItemNameChannel = view.findViewById(R.id.tv_item_name_channel);
             tvTimeAgoComment = view.findViewById(R.id.tv_item_time_ago_comment);

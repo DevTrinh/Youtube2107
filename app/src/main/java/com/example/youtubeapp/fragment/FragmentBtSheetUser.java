@@ -29,6 +29,7 @@ public class FragmentBtSheetUser extends BottomSheetDialogFragment {
     private TextView tvHelp, tvSettings;
 
     private TextView tvPrivacy, tvTerm;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -37,7 +38,7 @@ public class FragmentBtSheetUser extends BottomSheetDialogFragment {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_user, null);
         mapping(view);
         bottomSheetDialog.setContentView(view);
-        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from((View)view.getParent());
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from((View) view.getParent());
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
         ivSetting.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +88,7 @@ public class FragmentBtSheetUser extends BottomSheetDialogFragment {
         return bottomSheetDialog;
     }
 
-    public void mapping(@NonNull View view){
+    public void mapping(@NonNull View view) {
         clContains = view.findViewById(R.id.cl_contains_dialog_user);
         ivHelp = view.findViewById(R.id.iv_help_user);
         ivSetting = view.findViewById(R.id.iv_setting_user);
@@ -97,14 +98,14 @@ public class FragmentBtSheetUser extends BottomSheetDialogFragment {
         tvPrivacy = view.findViewById(R.id.tv_privacy_policy);
     }
 
-    public void onClickSettingUser(){
+    public void onClickSettingUser() {
         startActivity(new Intent(getContext(), ActivitySetting.class));
     }
 
-    public void onClickHelpUser(){
+    public void onClickHelpUser() {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:"));
-        intent.putExtra(Intent.EXTRA_EMAIL  , new String[] { "trinhmanhbkit@gmail.com" });
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"trinhmanhbkit@gmail.com"});
         intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback Youtube");
 
         startActivity(Intent.createChooser(intent, "Send..."));

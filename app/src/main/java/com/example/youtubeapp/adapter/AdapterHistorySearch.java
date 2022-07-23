@@ -39,7 +39,7 @@ public class AdapterHistorySearch extends RecyclerView.Adapter<AdapterHistorySea
     public void onBindViewHolder(@NonNull SearchViewHolder holder,
                                  @SuppressLint("RecyclerView") int position) {
         ItemSearch itemSearch = listSearch.get(position);
-        if (itemSearch == null){
+        if (itemSearch == null) {
             return;
         }
         holder.tvItemHistory.setText(itemSearch.getString());
@@ -68,16 +68,17 @@ public class AdapterHistorySearch extends RecyclerView.Adapter<AdapterHistorySea
 
     @Override
     public int getItemCount() {
-        if (listSearch == null){
-            return  0;
+        if (listSearch == null) {
+            return 0;
         }
         return listSearch.size();
     }
 
-    public class SearchViewHolder extends RecyclerView.ViewHolder{
+    public class SearchViewHolder extends RecyclerView.ViewHolder {
         private TextView tvItemHistory;
         private ImageView ivArrow;
         private ConstraintLayout clSearch;
+
         public SearchViewHolder(@NonNull View itemView) {
             super(itemView);
             clSearch = itemView.findViewById(R.id.cl_contains_item_search);

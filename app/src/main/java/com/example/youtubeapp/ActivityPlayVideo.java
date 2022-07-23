@@ -487,13 +487,13 @@ public class ActivityPlayVideo extends AppCompatActivity
                     String numberLikeComment = "";
                     String totalReplyCount = "";
                     JSONArray jsonItems = response.getJSONArray(ITEMS);
-                    if (endItem > jsonItems.length()){
+                    if (endItem > jsonItems.length()) {
                         endItem = jsonItems.length();
                         isCheckLastItem = false;
                     }
-                    Log.d("FALSE: "+endItem, isCheckLastItem +"");
+                    Log.d("FALSE: " + endItem, isCheckLastItem + "");
 
-                    if (start < endItem){
+                    if (start < endItem) {
 //                    Log.d("AAAAAAAAAAAA", jsonItems.length() + "");
                         for (int i = start; i < endItem; i++) {
                             JSONObject jsonItem = jsonItems.getJSONObject(i);
@@ -518,10 +518,9 @@ public class ActivityPlayVideo extends AppCompatActivity
                                     urlAvtChannelComment, timeComment,
                                     contentComment, numberLikeComment,
                                     totalReplyCount));
-                            if (!isCheckLastItem){
+                            if (!isCheckLastItem) {
                                 ivLoadMore.setVisibility(View.GONE);
-                            }
-                            else{
+                            } else {
                                 ivLoadMoreComment.setVisibility(View.VISIBLE);
                                 ivLoadMoreComment.setImageResource(R.drawable.ic_arrow_down);
                                 ivLoadMoreComment.setEnabled(true);

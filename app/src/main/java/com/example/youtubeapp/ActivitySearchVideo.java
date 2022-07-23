@@ -1,5 +1,8 @@
 package com.example.youtubeapp;
 
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
@@ -17,20 +21,14 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+
 import com.example.youtubeapp.adapter.AdapterHistorySearch;
+import com.example.youtubeapp.adapter.AdapterSuggestSearch;
 import com.example.youtubeapp.interfacee.InterfaceClickSearch;
 import com.example.youtubeapp.interfacee.InterfaceDefaultValue;
 import com.example.youtubeapp.item.ItemSearch;
@@ -38,23 +36,32 @@ import com.example.youtubeapp.preferences.PrefSearch;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class ActivitySearchVideo extends AppCompatActivity implements InterfaceDefaultValue {
     private static final int REQUEST_CODE_VALUE = 1000;
     private RecyclerView rvHistorySearch;
+    private RecyclerView rvSuggestSearch;
     public static AdapterHistorySearch adapterHistorySearch;
+    public static AdapterSuggestSearch adapterSuggestSearch;
     public EditText etSearch;
     private ArrayList<ItemSearch> listItemSearch = new ArrayList<>();
     private ArrayList<ItemSearch> listRevert = new ArrayList<>();
     private ArrayList<String> listSearchString = new ArrayList<>();
+
+    private ArrayList<ItemSearch> listSuggestSearch = new ArrayList<>();
     private TextView tvHistorySearch;
     private PrefSearch prefSearch;
-    private ImageView ivBackHome, ivMic;
+    private ImageView ivBackHome, ivMic, ivCancelSearch;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -81,7 +88,12 @@ public class ActivitySearchVideo extends AppCompatActivity implements InterfaceD
         //get data Preferences
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManagerSuggest = new LinearLayoutManager(this);
+
+        rvSuggestSearch.setLayoutManager(layoutManagerSuggest);
+
         rvHistorySearch.setLayoutManager(linearLayoutManager);
+
         adapterHistorySearch = new AdapterHistorySearch(listRevert,
                 new InterfaceClickSearch() {
                     @Override
@@ -92,9 +104,9 @@ public class ActivitySearchVideo extends AppCompatActivity implements InterfaceD
 
                     @Override
                     public void onClickIconRightHistory(int position) {
-                        Toast.makeText(ActivitySearchVideo.this,
-                                listRevert.get(position).getString() + "",
-                                Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ActivitySearchVideo.this,
+//                                listRevert.get(position).getString() + "",
+//                                Toast.LENGTH_SHORT).show();
                         etSearch.setText(listRevert.get(position).getString());
                     }
 
@@ -118,12 +130,22 @@ public class ActivitySearchVideo extends AppCompatActivity implements InterfaceD
                             isSave = true;
                         }
                     }
-                    if (!isSave) {
+                    if (!isSave && etSearch.getText().toString().trim().length() > 0) {
                         listSearchString.add(etSearch.getText().toString() + "");
                     }
-                    toValueSearch(etSearch.getText().toString() + "");
+                    if (etSearch.getText().toString().trim().length()>0){
+                        toValueSearch(etSearch.getText().toString() + "");
+                    }
+                    return true;
                 }
                 return false;
+            }
+        });
+
+        ivCancelSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                etSearch.setText("");
             }
         });
 
@@ -144,59 +166,62 @@ public class ActivitySearchVideo extends AppCompatActivity implements InterfaceD
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Log.d("beforeTextChanged", s+"");
+                Log.d("beforeTextChanged", s + "");
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.d("onTextChanged", s+"");
+                Log.d("onTextChanged", s + "");
 
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                Log.d("afterTextChanged", s+"");
-                getValueSuggest(s+"");
-            }
-        });
-    }
+                Log.d("afterTextChanged", s + "");
+                if (s.toString().trim().length() > 0){
+                    rvHistorySearch.setVisibility(View.GONE);
+                    ivCancelSearch.setVisibility(View.VISIBLE);
+                    rvSuggestSearch.setVisibility(View.VISIBLE);
+                    new ReadJSON().execute("http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q="+s);
+                    adapterSuggestSearch = new AdapterSuggestSearch(listSuggestSearch,
+                            new InterfaceClickSearch() {
+                                @Override
+                                public void onClickTextHistory(int position) {
+                                    etSearch.setText(listSuggestSearch.get(position).getString());
+                                    toValueSearch(listSuggestSearch.get(position).getString());
+                                }
 
-    public void getValueSuggest(String value){
-        String url = "https://serpapi.com/search.json?engine=google_autocomplete&q="
-                + value
-                + "&api_key=3ff4d635aed8e716681c89fb69b0bd38ce716a7988bd16a9875cd6806b6dfbaf";
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                url, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    JSONArray jsonItems = response.getJSONArray(SUGGESTIONS);
-                    Log.d("LENGTH SUGGEST: ", jsonItems.length()+"");
-                    for(int i = 0; i<jsonItems.length(); i++){
+                                @Override
+                                public void onClickIconRightHistory(int position) {
+                                    etSearch.setText(listSuggestSearch.get(position).getString());
+                                }
 
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                                @Override
+                                public void onCLickFrameItem(int position) {
+                                    etSearch.setText(listSuggestSearch.get(position).getString());
+                                    toValueSearch(listSuggestSearch.get(position).getString());
+                                }
+                            });
+                    rvSuggestSearch.setAdapter(adapterSuggestSearch);
+                }
+                else{
+                    ivCancelSearch.setVisibility(View.GONE);
+                    rvSuggestSearch.setVisibility(View.GONE);
+                    rvHistorySearch.setVisibility(View.VISIBLE);
+
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(ActivitySearchVideo.this, error+" FALSE GET SUGGEST SEARCH !", Toast.LENGTH_SHORT).show();
-            }
         });
-        requestQueue.add(jsonObjectRequest);
     }
 
-    private void getSpeak(){
+    private void getSpeak() {
         try {
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                     RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
             intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "please say something...");
             startActivityForResult(intent, REQUEST_CODE_VALUE);
-        } catch(ActivityNotFoundException e) {
+        } catch (ActivityNotFoundException e) {
             String appPackageName = "com.google.android.googlequicksearchbox";
             try {
                 startActivity(new Intent(Intent.ACTION_VIEW,
@@ -207,6 +232,66 @@ public class ActivitySearchVideo extends AppCompatActivity implements InterfaceD
             }
         }
     }
+
+    private class ReadJSON extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            StringBuilder content  = new StringBuilder();
+            try {
+                URL url  = new URL(strings[0]);
+                InputStreamReader inputStreamReader  = new InputStreamReader(url.openConnection().getInputStream());
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String line = "";
+                while ((line = bufferedReader.readLine()) != null){
+                    content.append(line);
+                }
+                bufferedReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return content.toString();
+        }
+
+        @SuppressLint("NotifyDataSetChanged")
+        @Override
+        protected void onPostExecute(String s) {
+            listSuggestSearch.clear();
+            super.onPostExecute(s);
+            byte ptext[] = new byte[0];
+            try {
+                ptext = s.getBytes("ISO-8859-1");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            String value = null;
+            try {
+                value = new String(ptext, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            try {
+
+                JSONArray jsonArray = new JSONArray(value);
+                JSONArray jsonChild = jsonArray.getJSONArray(1);
+//                Log.d("JSON ARRAY: ", jsonChild.length()+"");
+
+                String itemValue ="";
+                for (int i = 0; i<jsonChild.length(); i++){
+                    itemValue = jsonChild.getString(i);
+                    listSuggestSearch.add(new ItemSearch(itemValue));
+                    Log.d("VALUE: ", itemValue);
+                }
+                adapterSuggestSearch.notifyDataSetChanged();
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.d("LENGHT: ", listSuggestSearch.size()+"");
+
+        }
+    }
+
 
     // This callback is invoked when the Speech Recognizer returns.
 // This is where you process the intent and extract the speech text from the intent.
@@ -236,8 +321,9 @@ public class ActivitySearchVideo extends AppCompatActivity implements InterfaceD
         startActivity(returnMain);
     }
 
-
     public void mapping() {
+        ivCancelSearch = findViewById(R.id.iv_x_in_search);
+        rvSuggestSearch = findViewById(R.id.rv_suggest);
         ivMic = findViewById(R.id.iv_mic);
         ivBackHome = findViewById(R.id.ic_back_search);
         rvHistorySearch = findViewById(R.id.rv_history_search);

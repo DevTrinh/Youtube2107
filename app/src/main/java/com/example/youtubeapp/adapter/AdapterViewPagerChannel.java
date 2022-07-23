@@ -16,6 +16,7 @@ import com.example.youtubeapp.item.ItemInfoChannel;
 public class AdapterViewPagerChannel extends FragmentStateAdapter {
 
     private ItemInfoChannel itemInfoChannel;
+
     public AdapterViewPagerChannel(@NonNull FragmentActivity fragmentActivity, ItemInfoChannel itemInfoChannel) {
         super(fragmentActivity);
         this.itemInfoChannel = itemInfoChannel;
@@ -24,7 +25,7 @@ public class AdapterViewPagerChannel extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        switch (position){
+        switch (position) {
             case 0:
                 return new FragmentChannelHome(itemInfoChannel);
             case 1:

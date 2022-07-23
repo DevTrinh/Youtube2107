@@ -29,6 +29,7 @@ public class AdapterLoadPageTest extends RecyclerView.Adapter<RecyclerView.ViewH
     private ArrayList<ItemVideoMain> listItemVideoMain;
     private InterfaceClickFrame interfaceClickFrame;
     private Context context;
+
     public AdapterLoadPageTest(ArrayList<ItemVideoMain> listItemVideoMain,
                                InterfaceClickFrame interfaceClickFrame, Context context) {
         this.listItemVideoMain = listItemVideoMain;
@@ -69,10 +70,9 @@ public class AdapterLoadPageTest extends RecyclerView.Adapter<RecyclerView.ViewH
             ItemVideoMainViewHolder itemVideoMainViewHolder = (ItemVideoMainViewHolder) holder;
 
             Picasso.get().load(itemVideoMain.getUrlAvtChannel()).into(itemVideoMainViewHolder.ivAvtChannel);
-            if (itemVideoMain.getIvVideo().isEmpty()){
+            if (itemVideoMain.getIvVideo().isEmpty()) {
                 Picasso.get().load("https://dizibrand-19a1e.kxcdn.com/wp-content/uploads/2019/06/google-translate-la-gi-dizibrand.com_.jpg").into(itemVideoMainViewHolder.ivAvtChannel);
-            }
-            else{
+            } else {
                 Picasso.get().load(itemVideoMain.getIvVideo()).into(itemVideoMainViewHolder.youTubeThumbnailView);
             }
             itemVideoMainViewHolder.youTubeThumbnailView.getLayoutParams().width = width;

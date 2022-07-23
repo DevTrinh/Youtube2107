@@ -24,6 +24,7 @@ import com.example.youtubeapp.fragment.FragmentNotify;
 import com.example.youtubeapp.fragment.FragmentSubs;
 import com.example.youtubeapp.fragment.FragmentValueSearch;
 import com.example.youtubeapp.interfacee.InterfaceDefaultValue;
+
 public class MainActivity extends AppCompatActivity implements InterfaceDefaultValue {
 
     private ImageView ivEndNavHome, ivEndNavExplore,
@@ -37,13 +38,16 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+/*        Intent intent = new Intent(this, StartApp.class);
+        startActivity(intent)*/;
+
         mapping();
 
         Intent getData = getIntent();
         String valueSearch = getData.getStringExtra(VALUE_SEARCH);
         String idChannel = getData.getStringExtra(VALUE_CHANNEL_ID);
 
-        if (valueSearch != null){
+        if (valueSearch != null) {
 //            Log.d("AHIHIHIHIHIHIIHIHI", valueSearch+"");
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             //ADD FRAGMENT
@@ -55,9 +59,8 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
                     fragmentValueSearch, FRAGMENT_SEARCH);
             fragmentTransaction.addToBackStack(FRAGMENT_SEARCH);
             fragmentTransaction.commit();
-        }
-        else if (idChannel != null){
-            Toast.makeText(this, idChannel+"", Toast.LENGTH_SHORT).show();
+        } else if (idChannel != null) {
+            Toast.makeText(this, idChannel + "", Toast.LENGTH_SHORT).show();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             //ADD FRAGMENT
             FragmentChannel fragmentChannel = new FragmentChannel(idChannel);
@@ -65,9 +68,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
                     fragmentChannel, FRAGMENT_SEARCH);
             fragmentTransaction.addToBackStack(FRAGMENT_CHANNEL);
             fragmentTransaction.commit();
-        }
-
-        else{
+        } else {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             //ADD FRAGMENT
             FragmentHome fragmentHome = new FragmentHome();
@@ -101,14 +102,14 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
         });
     }
 
-    private void openOnClickUser(){
+    private void openOnClickUser() {
         FragmentBtSheetUser fragmentBtSheetUser = new FragmentBtSheetUser();
         fragmentBtSheetUser.show(getSupportFragmentManager(), fragmentBtSheetUser.getTag());
     }
 
     public void onClickHome(@NonNull View view) {
-       fragmentTransaction = fragmentManager.beginTransaction();
-        switch (view.getId()){
+        fragmentTransaction = fragmentManager.beginTransaction();
+        switch (view.getId()) {
             case R.id.iv_end_bar_home:
                 removeFragment();
                 setDisplayEndNavOff();
@@ -172,13 +173,13 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
         fragmentTransaction.commit();
     }
 
-    public void removeFragment(){
+    public void removeFragment() {
         Fragment fragmentChannel = getSupportFragmentManager().findFragmentByTag(FRAGMENT_CHANNEL);
         Fragment fragmentValueSearch = getSupportFragmentManager().findFragmentByTag(FRAGMENT_SEARCH);
-        if(fragmentChannel != null){
+        if (fragmentChannel != null) {
             getSupportFragmentManager().beginTransaction().remove(fragmentChannel).commit();
         }
-        if (fragmentValueSearch != null){
+        if (fragmentValueSearch != null) {
             getSupportFragmentManager().beginTransaction().remove(fragmentValueSearch).commit();
         }
     }
@@ -191,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
 
     @Override
     public void onBackPressed() {
-        if (fragmentManager.getBackStackEntryCount()>0){
+        if (fragmentManager.getBackStackEntryCount() > 0) {
             removeFragment();
             setDisplayEndNavOff();
             fragmentTransaction = fragmentManager.beginTransaction();
@@ -201,8 +202,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
             fragmentTransaction.addToBackStack(FRAGMENT_HOME);
             Toast.makeText(this, "Fragment Ex", Toast.LENGTH_SHORT).show();
             fragmentTransaction.commit();
-        }
-        else{
+        } else {
             super.onBackPressed();
         }
     }

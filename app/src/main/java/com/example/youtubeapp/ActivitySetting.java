@@ -27,20 +27,20 @@ public class ActivitySetting extends AppCompatActivity {
         rvItemSettings.setLayoutManager(linearLayoutManager);
         adapterOptionsSetting = new AdapterOptionsSetting(getListOptions(),
                 new InterfaceClickWithString() {
-            @Override
-            public void onClickWithString(String value) {
-                Toast.makeText(ActivitySetting.this, value+"", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onClickWithString(String value) {
+                        Toast.makeText(ActivitySetting.this, value + "", Toast.LENGTH_SHORT).show();
+                    }
+                });
         rvItemSettings.setAdapter(adapterOptionsSetting);
         adapterOptionsSetting.notifyDataSetChanged();
     }
 
-    public void mapping(){
+    public void mapping() {
         rvItemSettings = findViewById(R.id.rv_options_setting);
     }
 
-    public ArrayList<String> getListOptions(){
+    public ArrayList<String> getListOptions() {
         ArrayList<String> list = new ArrayList<>();
         list.add("General");
         list.add("Autoplay");

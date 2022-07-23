@@ -28,23 +28,21 @@ public class AdapterListVideoInChannel extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public int getItemViewType(int position) {
-         if (list.size() - 1 == position){
-             return VIEW_LOAD;
-         }
-         else{
-             return VIEW_LIST;
-         }
+        if (list.size() - 1 == position) {
+            return VIEW_LOAD;
+        } else {
+            return VIEW_LIST;
+        }
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == VIEW_LIST){
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_channel,null);
+        if (viewType == VIEW_LIST) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_channel, null);
             return new ListVideoChannelViewHolder(view);
-        }
-        else{
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view_arrow_down,null);
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view_arrow_down, null);
             return new LastVideoChannelViewHolder(view);
         }
     }
@@ -62,15 +60,14 @@ public class AdapterListVideoInChannel extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public int getItemCount() {
-        if (list != null){
+        if (list != null) {
             return list.size();
-        }
-        else{
+        } else {
             return 0;
         }
     }
 
-    private class LastVideoChannelViewHolder extends RecyclerView.ViewHolder{
+    private class LastVideoChannelViewHolder extends RecyclerView.ViewHolder {
         private ImageView ivLoadMore;
 
         public LastVideoChannelViewHolder(@NonNull View itemView) {
@@ -79,7 +76,7 @@ public class AdapterListVideoInChannel extends RecyclerView.Adapter<RecyclerView
         }
     }
 
-    private class ListVideoChannelViewHolder extends RecyclerView.ViewHolder{
+    private class ListVideoChannelViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvTitle;
         private TextView tvNameChannel;
@@ -91,7 +88,7 @@ public class AdapterListVideoInChannel extends RecyclerView.Adapter<RecyclerView
             super(itemView);
         }
 
-        public void mapping(@NonNull View view){
+        public void mapping(@NonNull View view) {
             tvTitle = view.findViewById(R.id.tv_title_list_channel);
             tvNameChannel = view.findViewById(R.id.tv_name_channel);
             numberVideo = view.findViewById(R.id.tv_number_video);

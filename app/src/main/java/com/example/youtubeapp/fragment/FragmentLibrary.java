@@ -22,7 +22,7 @@ public class FragmentLibrary extends Fragment implements InterfaceDefaultValue {
 
         Toast.makeText(getActivity(), "Fragment Library", Toast.LENGTH_SHORT).show();
 
-        View view = inflater.inflate(R.layout.fragment_library,container, false);
+        View view = inflater.inflate(R.layout.fragment_library, container, false);
         return view;
     }
 }

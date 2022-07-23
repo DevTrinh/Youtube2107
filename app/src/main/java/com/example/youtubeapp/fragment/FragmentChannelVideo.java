@@ -94,13 +94,13 @@ public class FragmentChannelVideo extends Fragment implements InterfaceDefaultVa
 
         adapterVideoChannelTest = new AdapterVideoChannelTest(listVideo, getActivity(),
                 new InterfaceClickWithPosition() {
-            @Override
-            public void onClickWithPosition(int position) {
+                    @Override
+                    public void onClickWithPosition(int position) {
 //                Toast.makeText(getContext(), listVideo.get(position).getIdVideo()+"",
 //                        Toast.LENGTH_SHORT).show();
-                Log.d("ID VIDEO CLICK: ", listVideo.get(position).getIdVideo());
-            }
-        });
+                        Log.d("ID VIDEO CLICK: ", listVideo.get(position).getIdVideo());
+                    }
+                });
 
         rvVideos.setAdapter(adapterVideoChannelTest);
 
@@ -137,12 +137,12 @@ public class FragmentChannelVideo extends Fragment implements InterfaceDefaultVa
                     String linkStatistic = "";
                     JSONArray jsonItems = response.getJSONArray(ITEMS);
 //                    itemEndLoad = ;
-                    if (endItem > jsonItems.length()){
+                    if (endItem > jsonItems.length()) {
                         endItem = jsonItems.length();
                         isCheckLastItem = false;
                     }
 
-                    if (start < endItem){
+                    if (start < endItem) {
                         for (int i = start; i < endItem; i++) {
                             JSONObject jsonItem = jsonItems.getJSONObject(i);
                             JSONObject jsonId = jsonItem.getJSONObject(ID);
@@ -198,10 +198,9 @@ public class FragmentChannelVideo extends Fragment implements InterfaceDefaultVa
                     listVideo.get(position).setViewCount(FragmentHome.formatData(Integer.parseInt(jsonStatistic.getString(VIEW_COUNT))) + " views");
 //                    Log.d("VIEW COUNT: "+ position, ItemVideoInChannel.formatData(Integer.parseInt(jsonStatistic.getString(VIEW_COUNT))));
                     adapterVideoChannelTest.notifyItemChanged(position);
-                    if (!isLoad){
+                    if (!isLoad) {
                         ivLoadMore.setVisibility(View.GONE);
-                    }
-                    else{
+                    } else {
                         ivLoadMore.setVisibility(View.VISIBLE);
                         ivLoadMore.setImageResource(R.drawable.ic_arrow_down);
                         ivLoadMore.setEnabled(true);

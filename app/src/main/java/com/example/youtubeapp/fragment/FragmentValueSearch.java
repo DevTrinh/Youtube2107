@@ -240,10 +240,9 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
                     }
 
                     adapterValueSearch.notifyItemChanged(position);
-                    if (!isLoad){
+                    if (!isLoad) {
                         ivLoadMore.setVisibility(View.GONE);
-                    }
-                    else{
+                    } else {
                         ivLoadMore.setVisibility(View.VISIBLE);
                         ivLoadMore.setImageResource(R.drawable.ic_arrow_down);
                         ivLoadMore.setEnabled(true);
@@ -311,7 +310,7 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
                                 timeUp = FragmentHome.formatTimeUpVideo(jsonSnippet.getString(PUBLISHED_AT));
                                 channelId = jsonSnippet.getString(CHANNEL_ID);
 //                            Log.d("CHANNEL ID: "+i, channelId);
-                                getInfoChannel(channelId, i, isCheckLastItem );
+                                getInfoChannel(channelId, i, isCheckLastItem);
                                 titleVideo = jsonSnippet.getString(TITLE);
 //                            Log.d("TITLE CHANNEL: "+i, titleVideo);
                                 descriptionVideo = jsonSnippet.getString(DESCRIPTION);

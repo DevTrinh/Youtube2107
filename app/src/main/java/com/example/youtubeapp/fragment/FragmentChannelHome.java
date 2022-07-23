@@ -48,19 +48,18 @@ public class FragmentChannelHome extends Fragment implements InterfaceDefaultVal
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view  = inflater.inflate(R.layout.fragment_channel_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_channel_home, container, false);
         mapping(view);
 //        Log.d("NOT NULL ! ",itemInfoChannel.getIdChannel());
-        if (itemInfoChannel == null){
+        if (itemInfoChannel == null) {
             Toast.makeText(getContext(), "DATA INFO CHANNEL IS NULL !", Toast.LENGTH_SHORT).show();
-        }
-        else{
+        } else {
             Picasso.get().load(itemInfoChannel.getUrlBanner()).into(ivBannerChannel);
-            Picasso.get().load(itemInfoChannel.getUrlAvt()). into(ivAvtChannel);
+            Picasso.get().load(itemInfoChannel.getUrlAvt()).into(ivAvtChannel);
             tvTittleChannel.setText(itemInfoChannel.getTitleChannel());
             tvNumberSubs.setText(itemInfoChannel.getSubscriberCount());
             tvNumberVideo.setText(itemInfoChannel.getVideoCount());
-            tvBioChannel.setText("Hi I'm "+itemInfoChannel.getTitleChannel()+" >>");
+            tvBioChannel.setText("Hi I'm " + itemInfoChannel.getTitleChannel() + " >>");
         }
 
         Log.d("NOTIFICATION: ", "Fragment Home Is Create");
@@ -68,9 +67,9 @@ public class FragmentChannelHome extends Fragment implements InterfaceDefaultVal
         return view;
     }
 
-    public void mapping(@NonNull View view ){
+    public void mapping(@NonNull View view) {
         tvBioChannel = view.findViewById(R.id.tv_bio_channel);
-        ivBannerChannel  = view.findViewById(R.id.iv_banner_channel);
+        ivBannerChannel = view.findViewById(R.id.iv_banner_channel);
         ivAvtChannel = view.findViewById(R.id.iv_avt_channel);
         tvTittleChannel = view.findViewById(R.id.tv_title_channel);
         tvSub = view.findViewById(R.id.tv_subscribe_channel);

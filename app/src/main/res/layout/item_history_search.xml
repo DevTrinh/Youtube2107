@@ -29,6 +29,7 @@
         app:layout_constraintLeft_toRightOf="@id/iv_history_search"
         app:layout_constraintBottom_toBottomOf="@id/iv_history_search"
         app:layout_constraintVertical_bias="0"
+        android:layout_marginLeft="@dimen/dp12"
         android:singleLine="true"
         android:textSize="@dimen/dp15"
         android:text="how to make button navigation in android"

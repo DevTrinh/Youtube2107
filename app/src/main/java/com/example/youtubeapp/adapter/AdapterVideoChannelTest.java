@@ -47,8 +47,8 @@ public class AdapterVideoChannelTest extends RecyclerView.Adapter<AdapterVideoCh
     @Override
     public void onBindViewHolder(@NonNull ItemVideoInChannelViewHolder holder,
                                  @SuppressLint("RecyclerView") int position) {
-        int width = (int) (context.getResources().getDisplayMetrics().widthPixels*0.45);
-        int widthText = (int) (context.getResources().getDisplayMetrics().widthPixels*0.4);
+        int width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.45);
+        int widthText = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.4);
 
         ItemVideoInChannel itemVideoInChannel = list.get(position);
 
@@ -68,16 +68,15 @@ public class AdapterVideoChannelTest extends RecyclerView.Adapter<AdapterVideoCh
 
     @Override
     public int getItemCount() {
-        if (list != null){
+        if (list != null) {
             return list.size();
-        }
-        else{
+        } else {
             return 0;
         }
     }
 
-    public class ItemVideoInChannelViewHolder extends RecyclerView.ViewHolder{
-        private FrameLayout  flContains;
+    public class ItemVideoInChannelViewHolder extends RecyclerView.ViewHolder {
+        private FrameLayout flContains;
         private ImageView ivVideo;
         private TextView tvTitleVideo;
         private TextView tvTimeUp;

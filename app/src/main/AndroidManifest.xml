@@ -27,12 +27,6 @@
             android:name=".ActivitySetting"
             android:exported="false" />
         <activity
-            android:name=".OnlyPlayVideo"
-            android:exported="false" />
-        <activity
-            android:name=".fragment.FragmentPlayVideo"
-            android:exported="false" />
-        <activity
             android:name=".ActivitySearchVideo"
             android:exported="false" />
         <activity

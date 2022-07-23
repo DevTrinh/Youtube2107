@@ -10,7 +10,6 @@ public class StartApp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_app);
-
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

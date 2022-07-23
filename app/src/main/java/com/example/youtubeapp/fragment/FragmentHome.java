@@ -87,7 +87,7 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
         adapterListHotKeys = new AdapterListHotKeys(getListKey(), new InterfaceClickWithString() {
             @Override
             public void onClickWithString(String value) {
-                Toast.makeText(getContext(), value+"", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), value + "", Toast.LENGTH_SHORT).show();
             }
         });
         rvListHotKeys.setAdapter(adapterListHotKeys);
@@ -124,13 +124,14 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
                         fragmentMenuItemVideoMain.show(getActivity()
                                 .getSupportFragmentManager(), getTag());
                     }
+
                     @Override
                     public void onClickAvtChannel(int position) {
 //                        Log.d(listItemVideo.get(position).getIdChannel()+"", "hihihi");
                         requireActivity().getSupportFragmentManager().beginTransaction().remove(fragment).commit();
                         FragmentTransaction fragmentTransaction =
                                 getActivity().getSupportFragmentManager().beginTransaction();
-                        FragmentChannel fragmentChannel = new FragmentChannel(listItemVideo.get(position).getIdChannel()+"");
+                        FragmentChannel fragmentChannel = new FragmentChannel(listItemVideo.get(position).getIdChannel() + "");
                         fragmentTransaction.replace(R.id.cl_contains_search,
                                 fragmentChannel, FRAGMENT_CHANNEL);
                         fragmentTransaction.addToBackStack(FRAGMENT_CHANNEL);
@@ -190,11 +191,11 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
                             String description = "";
                             JSONArray jsonItems = response.getJSONArray(ITEMS);
 //                          CHECK LOAD MORE
-                            if (endItem > jsonItems.length()){
+                            if (endItem > jsonItems.length()) {
                                 endItem = jsonItems.length();
                                 isCheckLastItem = false;
                             }
-                            if (start < endItem){
+                            if (start < endItem) {
 //                                Log.d("LOAD MORE: ", end+"");
 //                            Log.d("AAAAAAAAAAAAA", jsonItems.length() + "");
                                 for (int i = start; i < endItem; i++) {
@@ -222,7 +223,7 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
                                     JSONObject jsonStatistics = jsonItem.getJSONObject(STATISTICS);
                                     viewCount = formatData(jsonStatistics.getInt(VIEW_COUNT)) + " views";
 //                                Log.d("View Count: "+i, viewCount);
-                                    if (jsonStatistics.has(LIKED_COUNT)){
+                                    if (jsonStatistics.has(LIKED_COUNT)) {
                                         numberLiker = formatData(jsonStatistics.getInt(LIKED_COUNT));
                                     }
 //                                Log.d("Number like"+i,numberLiker);
@@ -277,10 +278,9 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
 //                    Log.d("AAAAA " + position, urlChannel);
                     }
                     adapterMainVideoYoutube.notifyItemChanged(position);
-                    if (!isLoad){
+                    if (!isLoad) {
                         ivLoadMore.setVisibility(View.GONE);
-                    }
-                    else{
+                    } else {
                         ivLoadMore.setVisibility(View.VISIBLE);
                         ivLoadMore.setImageResource(R.drawable.ic_arrow_down);
                         ivLoadMore.setEnabled(true);
@@ -379,7 +379,7 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
             public void run() {
                 rfMain.setRefreshing(false);
             }
-        },2000);
+        }, 2000);
         listItemVideo.clear();
         getJsonApiYoutube(positionStart, positionEnd);
         adapterMainVideoYoutube.notifyDataSetChanged();

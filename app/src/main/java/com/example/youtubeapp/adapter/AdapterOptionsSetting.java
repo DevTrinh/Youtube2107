@@ -31,7 +31,7 @@ public class AdapterOptionsSetting extends RecyclerView.Adapter<AdapterOptionsSe
     public ItemSettingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         @SuppressLint("InflateParams")
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_options_setting, null);
-       return new ItemSettingViewHolder(view);
+        return new ItemSettingViewHolder(view);
     }
 
     @Override
@@ -42,20 +42,20 @@ public class AdapterOptionsSetting extends RecyclerView.Adapter<AdapterOptionsSe
         holder.tvOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                interfaceClickWithString.onClickWithString(holder.tvOptions.getText().toString()+"");
+                interfaceClickWithString.onClickWithString(holder.tvOptions.getText().toString() + "");
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        if (listOptionsSetting == null){
+        if (listOptionsSetting == null) {
             return 0;
         }
         return listOptionsSetting.size();
     }
 
-    public class ItemSettingViewHolder extends RecyclerView.ViewHolder{
+    public class ItemSettingViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvOptions;
 

@@ -35,7 +35,7 @@ public class FragmentChannelPlayL extends Fragment {
         return view;
     }
 
-    public void mapping(){
+    public void mapping() {
 
     }
 }

@@ -49,7 +49,7 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
     private ImageView ivCancel;
     private ImageView ivSearch;
     private ImageView ivMenu;
-    private String idChannel= "";
+    private String idChannel = "";
 
     public FragmentChannel(String idChannel) {
         this.idChannel = idChannel;
@@ -62,10 +62,10 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_channel, container, false);
         mapping(view);
-        Log.d("AAAAAAA", "ID channel "+ idChannel);
+        Log.d("AAAAAAA", "ID channel " + idChannel);
 
         final String urlInfoChannel = "https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics%2C%20brandingSettings&id="
-                +idChannel+"&maxResults=50&key="+API_KEY;
+                + idChannel + "&maxResults=50&key=" + API_KEY;
 
         getJsonData(urlInfoChannel);
 
@@ -88,7 +88,7 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
         return view;
     }
 
-    public void getJsonData(String url){
+    public void getJsonData(String url) {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 url, null, new Response.Listener<JSONObject>() {
@@ -102,6 +102,7 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
             String subscriberCount;
             String videoCount;
             String idChannel;
+
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -133,7 +134,7 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
                     viewCount = jsonStatics.getString(VIEW_COUNT);
 //                    Log.d("VIEW COUNT: ", viewCount);
                     subscriberCount = jsonStatics.getString(SUBSCRIBE_COUNT);
-                    Log.d("SUBSCRIBE: ",subscriberCount);
+                    Log.d("SUBSCRIBE: ", subscriberCount);
                     videoCount = jsonStatics.getString(VIDEO_COUNT);
 //                    Log.d("VIEW COUNT: ", videoCount);
 
@@ -155,7 +156,7 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
                     viewPagerChannel.setOffscreenPageLimit(3);
 
                     new TabLayoutMediator(tabLayout, viewPagerChannel, (tab, position) -> {
-                        switch (position){
+                        switch (position) {
                             case 0:
                                 tab.setText("Home");
                                 break;
@@ -185,14 +186,14 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(), error+" Json Data Info Channel", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), error + " Json Data Info Channel", Toast.LENGTH_SHORT).show();
             }
         });
 
         requestQueue.add(jsonObjectRequest);
     }
 
-    public void mapping(@NonNull View view){
+    public void mapping(@NonNull View view) {
         tabLayout = view.findViewById(R.id.tl_contains_element);
         viewPagerChannel = view.findViewById(R.id.vp_contains_content);
         tvTitleChannel = view.findViewById(R.id.tv_title_top_channel);
