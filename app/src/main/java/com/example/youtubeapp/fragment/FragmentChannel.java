@@ -151,7 +151,7 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
                             viewCount, subscriberCount,
                             videoCount, idChannel);
 
-                    adtViewPager = new AdapterViewPagerChannel(requireActivity(), itemInfoChannel);
+                    adtViewPager = new AdapterViewPagerChannel(getActivity(), itemInfoChannel);
                     viewPagerChannel.setAdapter(adtViewPager);
                     viewPagerChannel.setOffscreenPageLimit(3);
 

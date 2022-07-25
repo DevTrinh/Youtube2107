@@ -1,5 +1,7 @@
 package com.example.youtubeapp.fragment;
 
+import static com.example.youtubeapp.MainActivity.fragmentTransaction;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
@@ -13,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -43,6 +46,7 @@ import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import pl.droidsonroids.gif.GifImageView;
@@ -128,11 +132,11 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
                     @Override
                     public void onClickAvtChannel(int position) {
 //                        Log.d(listItemVideo.get(position).getIdChannel()+"", "hihihi");
-                        requireActivity().getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-                        FragmentTransaction fragmentTransaction =
+//                        getActivity().getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+                        fragmentTransaction =
                                 getActivity().getSupportFragmentManager().beginTransaction();
                         FragmentChannel fragmentChannel = new FragmentChannel(listItemVideo.get(position).getIdChannel() + "");
-                        fragmentTransaction.replace(R.id.cl_contains_search,
+                        fragmentTransaction.add(R.id.cl_contains_search,
                                 fragmentChannel, FRAGMENT_CHANNEL);
                         fragmentTransaction.addToBackStack(FRAGMENT_CHANNEL);
                         fragmentTransaction.commit();
@@ -156,7 +160,7 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
             public void onClick(View v) {
                 ivLoadMore.setImageResource(R.drawable.gif_load_more);
                 positionStart = positionEnd;
-                positionEnd += 8;
+                positionEnd += 10;
                 ivLoadMore.setEnabled(false);
                 getJsonApiYoutube(positionStart, positionEnd);
 //                Log.d("LOAD DATA MORE: ", positionEnd+"");

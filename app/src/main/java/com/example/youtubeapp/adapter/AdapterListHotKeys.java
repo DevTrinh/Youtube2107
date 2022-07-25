@@ -45,6 +45,7 @@ public class AdapterListHotKeys extends
             holder.tvKeyWords.setBackgroundResource(R.drawable.bg_on_selected_key);
             holder.tvKeyWords.setTextColor(Color.WHITE);
         }
+
         holder.tvKeyWords.setText(value + "");
 
         holder.tvKeyWords.setOnClickListener(new View.OnClickListener() {

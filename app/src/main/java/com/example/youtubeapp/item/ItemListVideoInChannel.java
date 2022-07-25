@@ -2,7 +2,7 @@ package com.example.youtubeapp.item;
 
 public class ItemListVideoInChannel {
     private String idVideo;
-    private String titleVideo;
+    private String titleList;
     private String urlImageList;
     private String titleChannel;
     private String numberVideo;
@@ -15,12 +15,12 @@ public class ItemListVideoInChannel {
         this.idVideo = idVideo;
     }
 
-    public String getTitleVideo() {
-        return titleVideo;
+    public String getTitleList() {
+        return titleList;
     }
 
-    public void setTitleVideo(String titleVideo) {
-        this.titleVideo = titleVideo;
+    public void setTitleList(String titleList) {
+        this.titleList = titleList;
     }
 
     public String getUrlImageList() {
@@ -47,9 +47,9 @@ public class ItemListVideoInChannel {
         this.numberVideo = numberVideo;
     }
 
-    public ItemListVideoInChannel(String idVideo, String titleVideo, String urlImageList, String titleChannel, String numberVideo) {
+    public ItemListVideoInChannel(String idVideo, String titleList, String urlImageList, String titleChannel, String numberVideo) {
         this.idVideo = idVideo;
-        this.titleVideo = titleVideo;
+        this.titleList = titleList;
         this.urlImageList = urlImageList;
         this.titleChannel = titleChannel;
         this.numberVideo = numberVideo;

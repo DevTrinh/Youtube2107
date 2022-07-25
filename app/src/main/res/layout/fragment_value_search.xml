@@ -89,7 +89,6 @@
         app:layout_constraintTop_toBottomOf="@id/cl_nav_after_search"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf=""
         android:background="@color/bg_et_search"/>
 
     <pl.droidsonroids.gif.GifImageView
@@ -101,7 +100,6 @@
         app:layout_constraintRight_toRightOf="parent"
         android:paddingVertical="@dimen/dp12"
         android:src="@drawable/ic_arrow_down"/>
-
 
     <ProgressBar
         android:id="@+id/pb_load_video_search"

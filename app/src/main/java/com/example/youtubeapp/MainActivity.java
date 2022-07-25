@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -31,7 +32,9 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
             ivEndNavSubscriptions, ivEndNavNotification,
             ivEndNavLibrary, ivSearch, ivUser, ivDataTrans;
     public FragmentManager fragmentManager = getSupportFragmentManager();
-    public FragmentTransaction fragmentTransaction;
+    public static FragmentTransaction fragmentTransaction;
+
+    public FrameLayout clChannelSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +64,11 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
             fragmentTransaction.commit();
         } else if (idChannel != null) {
             Toast.makeText(this, idChannel + "", Toast.LENGTH_SHORT).show();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction = fragmentManager.beginTransaction();
             //ADD FRAGMENT
             FragmentChannel fragmentChannel = new FragmentChannel(idChannel);
             fragmentTransaction.add(R.id.cl_contains_search,
-                    fragmentChannel, FRAGMENT_SEARCH);
+                    fragmentChannel, FRAGMENT_CHANNEL);
             fragmentTransaction.addToBackStack(FRAGMENT_CHANNEL);
             fragmentTransaction.commit();
         } else {
@@ -111,77 +114,85 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
         fragmentTransaction = fragmentManager.beginTransaction();
         switch (view.getId()) {
             case R.id.iv_end_bar_home:
-                removeFragment();
                 setDisplayEndNavOff();
-                ivEndNavHome.setImageResource(R.drawable.ic_home_on);
-//                REMOVE IF SEARCH DISPLAY
-//                manageFragment(FRAGMENT_SEARCH);
-//                Toast.makeText(this, getSupportFragmentManager().getBackStackEntryCount()+"", Toast.LENGTH_SHORT).show();
-//                Fragment fragmentChannel = getSupportFragmentManager().findFragmentByTag(FRAGMENT_CHANNEL);
-//                if (fragmentChannel == null ){
-//                    fragmentManager.popBackStack(FRAGMENT_HOME, 0);
-//                }
-//                else{
-//                    fragmentTransaction.remove(fragmentChannel);
-//                    FragmentHome fragmentHome = new FragmentHome();
-//                    fragmentTransaction.replace(R.id.cl_contains_fragment, fragmentHome);
-//                }
-//                if (fragmentManager.getBackStackEntryCount()>0){
-//                    fragmentManager.popBackStack();
-//                }
+                removeNav();
+                if (ivEndNavHome.getDrawable().getAlpha() == R.drawable.ic_home_on){
+                    removeFragment();
+                    fragmentManager.popBackStack(FRAGMENT_HOME, 0);
+                    Log.d("HUHU: ", "HEHE");
+                }
+                else{
+                    ivEndNavHome.setImageResource(R.drawable.ic_home_on);
 
-                FragmentHome fragmentHome = new FragmentHome();
-                fragmentTransaction.replace(R.id.cl_contains_fragment, fragmentHome, FRAGMENT_HOME);
-                fragmentTransaction.addToBackStack(FRAGMENT_HOME);
+//                fragmentTransaction.replace(R.id.cl_contains_fragment, fragmentHome, FRAGMENT_HOME);
+//                fragmentTransaction.addToBackStack(FRAGMENT_HOME);
+                    FragmentChannel fragmentChannel = (FragmentChannel) getSupportFragmentManager().findFragmentByTag(FRAGMENT_CHANNEL);
+                    if (fragmentChannel == null){
+                        Log.d("NULL,", "AHIHI");
+                        fragmentManager.popBackStack(FRAGMENT_HOME, 0);
+                    }
+                    else{
+                        clChannelSearch.setVisibility(View.VISIBLE);
+                        Log.d("NOT NULL,", "AHIHI");
+                        getSupportFragmentManager().popBackStack(FRAGMENT_CHANNEL, 0);
+                    }
+                }
 
-                Toast.makeText(this, "Fragment Ex", Toast.LENGTH_SHORT).show();
+
+//                Toast.makeText(this, "Fragment Ex", Toast.LENGTH_SHORT).show();
                 break;
+
             case R.id.iv_end_bar_explore:
                 removeFragment();
                 setDisplayEndNavOff();
                 ivEndNavExplore.setImageResource(R.drawable.ic_explore_on);
                 FragmentExplore fragmentExplore = new FragmentExplore();
-                fragmentTransaction.replace(R.id.cl_contains_fragment, fragmentExplore, FRAGMENT_EXPLORE);
+                fragmentTransaction.add(R.id.cl_contains_fragment, fragmentExplore, FRAGMENT_EXPLORE);
                 fragmentTransaction.addToBackStack(FRAGMENT_EXPLORE);
                 Toast.makeText(this, "Fragment Ex", Toast.LENGTH_SHORT).show();
                 break;
+
             case R.id.iv_end_bar_subscriptions:
-                removeFragment();
+//                removeFragment();
+                clChannelSearch.setVisibility(View.GONE);
                 setDisplayEndNavOff();
                 ivEndNavSubscriptions.setImageResource(R.drawable.ic_subscrip_on);
                 FragmentSubs fragmentSubs = new FragmentSubs();
-                fragmentTransaction.replace(R.id.cl_contains_fragment, fragmentSubs, FRAGMENT_SUBSCRIPTION);
+                fragmentTransaction.add(R.id.cl_contains_fragment, fragmentSubs, FRAGMENT_SUBSCRIPTION);
                 fragmentTransaction.addToBackStack(FRAGMENT_SUBSCRIPTION);
                 break;
+
             case R.id.iv_end_bar_notifications:
                 removeFragment();
+
                 setDisplayEndNavOff();
                 ivEndNavNotification.setImageResource(R.drawable.ic_notifitcation_onn);
                 FragmentNotify fragmentNotify = new FragmentNotify();
-                fragmentTransaction.replace(R.id.cl_contains_fragment, fragmentNotify, FRAGMENT_NOTIFICATION);
+                fragmentTransaction.add(R.id.cl_contains_fragment, fragmentNotify, FRAGMENT_NOTIFICATION);
                 fragmentTransaction.addToBackStack(FRAGMENT_NOTIFICATION);
                 break;
+
             case R.id.iv_end_bar_library:
                 removeFragment();
                 setDisplayEndNavOff();
                 ivEndNavLibrary.setImageResource(R.drawable.ic_library_on);
-                FragmentLibrary fragmentLibrary = new FragmentLibrary();
-                fragmentTransaction.replace(R.id.cl_contains_fragment, fragmentLibrary, FRAGMENT_LIBRARY);
-                fragmentTransaction.addToBackStack(FRAGMENT_LIBRARY);
+
+                FragmentLibrary fragmentLibrary = (FragmentLibrary) fragmentManager.findFragmentByTag(FRAGMENT_LIBRARY);
+
+                if (fragmentLibrary == null){
+                    fragmentLibrary = new FragmentLibrary();
+                    fragmentTransaction.add(R.id.cl_contains_fragment, fragmentLibrary, FRAGMENT_LIBRARY);
+                    fragmentTransaction.addToBackStack(FRAGMENT_LIBRARY);
+                    Log.d(FRAGMENT_LIBRARY, "NULL");
+                }
+
+                else{
+                    fragmentManager.popBackStack(FRAGMENT_LIBRARY, 0);
+                    Log.d(FRAGMENT_LIBRARY, "NOT NULL");
+                }
                 break;
         }
         fragmentTransaction.commit();
-    }
-
-    public void removeFragment() {
-        Fragment fragmentChannel = getSupportFragmentManager().findFragmentByTag(FRAGMENT_CHANNEL);
-        Fragment fragmentValueSearch = getSupportFragmentManager().findFragmentByTag(FRAGMENT_SEARCH);
-        if (fragmentChannel != null) {
-            getSupportFragmentManager().beginTransaction().remove(fragmentChannel).commit();
-        }
-        if (fragmentValueSearch != null) {
-            getSupportFragmentManager().beginTransaction().remove(fragmentValueSearch).commit();
-        }
     }
 
 //    public void manageFragment(String TAG_FRAGMENT){
@@ -190,6 +201,11 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
 //            getSupportFragmentManager().beginTransaction().add(fragment, FRAGMENT_HOME).commit();
 //    }
 
+    public void removeNav(){
+        FragmentSubs fragmentSubs = (FragmentSubs) fragmentManager.findFragmentByTag(FRAGMENT_SUBSCRIPTION);
+        getSupportFragmentManager().beginTransaction().remove(fragmentSubs).commit();
+    }
+
     @Override
     public void onBackPressed() {
         if (fragmentManager.getBackStackEntryCount() > 0) {
@@ -197,13 +213,25 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
             setDisplayEndNavOff();
             fragmentTransaction = fragmentManager.beginTransaction();
             ivEndNavHome.setImageResource(R.drawable.ic_home_on);
-            FragmentHome fragmentHome = new FragmentHome();
-            fragmentTransaction.replace(R.id.cl_contains_fragment, fragmentHome, FRAGMENT_HOME);
-            fragmentTransaction.addToBackStack(FRAGMENT_HOME);
-            Toast.makeText(this, "Fragment Ex", Toast.LENGTH_SHORT).show();
+            FragmentChannel fragmentChannel = (FragmentChannel) fragmentManager.findFragmentByTag(FRAGMENT_CHANNEL);
+            fragmentTransaction.remove(fragmentChannel);
+//            fragmentTransaction.addToBackStack(FRAGMENT_HOME);
+//            Toast.makeText(this, "Fragment Ex", Toast.LENGTH_SHORT).show();
+            fragmentManager.popBackStack(FRAGMENT_HOME, 0);
             fragmentTransaction.commit();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    private void removeFragment() {
+        Fragment fragmentChannel = getSupportFragmentManager().findFragmentByTag(FRAGMENT_CHANNEL);
+        Fragment fragmentValueSearch = getSupportFragmentManager().findFragmentByTag(FRAGMENT_SEARCH);
+        if (fragmentChannel != null) {
+            getSupportFragmentManager().beginTransaction().remove(fragmentChannel).commit();
+        }
+        if (fragmentValueSearch != null) {
+            getSupportFragmentManager().beginTransaction().remove(fragmentValueSearch).commit();
         }
     }
 
@@ -217,6 +245,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
 
     @SuppressLint("WrongViewCast")
     public void mapping() {
+        clChannelSearch = findViewById(R.id.cl_contains_search);
         ivDataTrans = findViewById(R.id.iv_top_bar_connect_tv);
         ivUser = findViewById(R.id.iv_top_bar_user);
         ivSearch = findViewById(R.id.iv_top_bar_search);
