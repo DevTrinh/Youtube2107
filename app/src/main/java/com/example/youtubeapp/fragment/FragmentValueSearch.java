@@ -1,7 +1,6 @@
 package com.example.youtubeapp.fragment;
 
 import static com.example.youtubeapp.fragment.FragmentHome.formatData;
-import static com.example.youtubeapp.fragment.FragmentHome.listItemVideo;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -44,7 +43,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import pl.droidsonroids.gif.GifImageView;
 
@@ -178,7 +176,7 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
     private void displayChannel(int position) {
         FragmentTransaction fragmentTransaction =
                 getActivity().getSupportFragmentManager().beginTransaction();
-        FragmentChannel fragmentChannel = new FragmentChannel(listValueSearch.get(position).getChannelId());
+        FragmentChannel fragmentChannel = new FragmentChannel(listValueSearch.get(position).getChannelId(), getContext());
         fragmentTransaction.replace(R.id.cl_contains_search,
                 fragmentChannel, FRAGMENT_CHANNEL);
         fragmentTransaction.addToBackStack(FRAGMENT_CHANNEL);

@@ -2,11 +2,11 @@ package com.example.youtubeapp.interfacee;
 
 public interface InterfaceDefaultValue {
     //    String API_YOUTUBE_MAIN_VIDEO_VN = "https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=50&regionCode=VN&key=AIzaSyDA2oRYCsTyVd6u5y1ypfda19b-fQZ_7VQ";
-    String API_YOUTUBE_MAIN_VIDEO = "https://youtube.googleapis.com/youtube/v3/videos?part=id&part=liveStreamingDetails&part=snippet&part=statistics&chart=mostPopular&maxResults=50&key=AIzaSyBcgBrUZLhN1s9amYlMt-I3LNpPJ_05xoA";
+    String API_YOUTUBE_MAIN_VIDEO = "https://youtube.googleapis.com/youtube/v3/videos?part=id&part=liveStreamingDetails&part=snippet&part=statistics&chart=mostPopular&maxResults=50&key=AIzaSyDvtp6EB_2Np2U8_oGkjRB4ec_PTjockEs";
     String API_IMAGE_CHANNEL_YOUTUBE = "https://www.googleapis.com/youtube/v3/channels?part=snippet&id=UCwppdrjsBPAZg5_cUwQjfMQ&fields=items%2Fsnippet%2Fthumbnails&key=AIzaSyDA2oRYCsTyVd6u5y1ypfda19b-fQZ_7VQ";
     //    String infovideo  ... https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&maxResults=100&videoId=_VB39Jo8mAQ&key=AIzaSyDA2oRYCsTyVd6u5y1ypfda19b-fQZ_7VQ
     String API_YOUTUBE_EXPLORE = "https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=50&regionCode=VN&key=AIzaSyDA2oRYCsTyVd6u5y1ypfda19b-fQZ_7VQ";
-    String API_KEY = "AIzaSyBcgBrUZLhN1s9amYlMt-I3LNpPJ_05xoA";
+    String API_KEY = "AIzaSyDvtp6EB_2Np2U8_oGkjRB4ec_PTjockEs";
     String LIST_SEARCH = "https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=PL5uqQAwS_KDjAgLGiaCakwJV1f4vRnTLS&key=";
     String popular_video_inChannel = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCs2BlNkzS04Uj_qSSYEoIWA&maxResults=50&order=viewCount&key=";
 
@@ -66,6 +66,7 @@ public interface InterfaceDefaultValue {
     String DESCRIPTION = "description";
     String IMAGE_CHANNEL = "IMAGE_CHANNEL";
     String ID_REFRESH  = "ID_REFRESH";
+    String ITEM_COUNT = "itemCount";
 
     String AUTHOR_DISPLAY_NAME = "authorDisplayName";
     String TEXT_DISPLAY = "textDisplay";
@@ -81,6 +82,10 @@ public interface InterfaceDefaultValue {
 
     String PAGE_INFO = "pageInfo";
     String TOTAL_RESULTS = "totalResults";
+    String RESULT_PER_PAGE = "resultsPerPage";
 
     String VALUE = "value";
+    String MAX_RES = "maxres";
+
+    String PATH_API = "https://youtube.googleapis.com/youtube/v3/";
 }

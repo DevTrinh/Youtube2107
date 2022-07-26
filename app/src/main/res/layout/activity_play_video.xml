@@ -379,7 +379,7 @@
                             android:layout_marginTop="@dimen/dp10"
                             android:src="@drawable/iv_main_model"/>
 
-                        <TextView
+                        <EditText
                             android:id="@+id/tv_comment_first"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -387,9 +387,13 @@
                             app:layout_constraintTop_toTopOf="@id/iv_comment_first"
                             app:layout_constraintBottom_toBottomOf="@id/iv_comment_first"
                             app:layout_constraintLeft_toRightOf="@id/iv_comment_first"
-                            android:layout_marginLeft="@dimen/dp12"
-                            android:text="@string/studying_while_listen_to_this_perfect"
+                            android:layout_margin="@dimen/dp12"
+                            android:padding="@dimen/dp8"
+                            android:textSize="@dimen/dp12"
+                            android:hint="@string/enter_your_comment"
                             android:textColor="@color/black"
+                            android:textColorHint="@color/color51"
+                            android:background="@drawable/bg_enter_comment"
                             android:lines="1"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -434,6 +438,7 @@
             android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp8"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -473,8 +478,8 @@
 
         </androidx.core.widget.NestedScrollView>
 
-        <include layout="@layout/layout_bottom_sheet_list_comment"/>
         <include layout="@layout/fragment_description_video"/>
+        <include layout="@layout/layout_bottom_sheet_list_comment"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

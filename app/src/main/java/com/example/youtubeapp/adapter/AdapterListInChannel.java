@@ -36,13 +36,14 @@ public class AdapterListInChannel extends RecyclerView.Adapter<AdapterListInChan
         return new ListInChannelViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ListInChannelViewHolder holder,
                                  @SuppressLint("RecyclerView") int position) {
         ItemListVideoInChannel itemListVideoInChannel = listVideoInChannels.get(position);
         Picasso.get().load(itemListVideoInChannel.getUrlImageList()).into(holder.ivList);
         holder.tvList.setText(itemListVideoInChannel.getTitleList());
-        holder.tvNumberVideo.setText(itemListVideoInChannel.getNumberVideo());
+        holder.tvNumberVideo.setText(itemListVideoInChannel.getNumberVideo()+ " videos");
         holder.tvNumberVideoInImg.setText(itemListVideoInChannel.getNumberVideo());
         holder.tvTitleChannel.setText(itemListVideoInChannel.getTitleChannel());
         holder.clContainsListInChannel.setOnClickListener(new View.OnClickListener() {

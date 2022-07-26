@@ -1,6 +1,8 @@
 package com.example.youtubeapp.fragment;
 
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,11 +22,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.youtubeapp.ActivitySearchVideo;
-import com.example.youtubeapp.MainActivity;
 import com.example.youtubeapp.R;
 import com.example.youtubeapp.adapter.AdapterViewPagerChannel;
 import com.example.youtubeapp.interfacee.InterfaceDefaultValue;
@@ -36,7 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
@@ -50,9 +50,11 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
     private ImageView ivSearch;
     private ImageView ivMenu;
     private String idChannel = "";
+    private Context context;
 
-    public FragmentChannel(String idChannel) {
+    public FragmentChannel(String idChannel, Context context) {
         this.idChannel = idChannel;
+        this.context = context;
     }
 
     @Nullable
@@ -103,6 +105,7 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
             String videoCount;
             String idChannel;
 
+            @SuppressLint("UseRequireInsteadOfGet")
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -134,7 +137,7 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
                     viewCount = jsonStatics.getString(VIEW_COUNT);
 //                    Log.d("VIEW COUNT: ", viewCount);
                     subscriberCount = jsonStatics.getString(SUBSCRIBE_COUNT);
-                    Log.d("SUBSCRIBE: ", subscriberCount);
+//                    Log.d("SUBSCRIBE: ", subscriberCount);
                     videoCount = jsonStatics.getString(VIDEO_COUNT);
 //                    Log.d("VIEW COUNT: ", videoCount);
 

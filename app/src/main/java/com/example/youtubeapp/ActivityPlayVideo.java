@@ -26,6 +26,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -49,6 +50,7 @@ import com.example.youtubeapp.item.ItemComment;
 import com.example.youtubeapp.item.ItemValueSearch;
 import com.example.youtubeapp.item.ItemVideoMain;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -74,7 +76,7 @@ public class ActivityPlayVideo extends AppCompatActivity
 
     //    DESCRIPTION
     private BottomSheetBehavior btDescription;
-    private CardView bottomSheetDescription;
+    private LinearLayout bottomSheetDescription;
     private TextView tvTitleDes, tvLikeDes, tvViewDes, tvTimeDes, tvDescription, tvNameChannelDes;
     private CircleImageView ivAvtChannelDes;
     private String likeDes, viewerDes, timeDes, urlAvtChannel, description;
@@ -436,10 +438,8 @@ public class ActivityPlayVideo extends AppCompatActivity
     private void bottomSheetDisplay(
             @NonNull BottomSheetBehavior bt) {
 //        THIS IS SHOWING
-        setDisplayDes(bt);
         if (bt.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             bt.setState(BottomSheetBehavior.STATE_EXPANDED);
-
         } else {
             bt.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }

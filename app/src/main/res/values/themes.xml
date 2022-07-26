@@ -21,7 +21,7 @@
 
     <style name="Theme.YoutubeApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.YoutubeApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.YoutubeApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 
     <style name="BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/bottomSheetStyleWrapper</item>

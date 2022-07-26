@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -46,7 +43,6 @@ import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import pl.droidsonroids.gif.GifImageView;
@@ -133,13 +129,15 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
                     public void onClickAvtChannel(int position) {
 //                        Log.d(listItemVideo.get(position).getIdChannel()+"", "hihihi");
 //                        getActivity().getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-                        fragmentTransaction =
-                                getActivity().getSupportFragmentManager().beginTransaction();
-                        FragmentChannel fragmentChannel = new FragmentChannel(listItemVideo.get(position).getIdChannel() + "");
-                        fragmentTransaction.add(R.id.cl_contains_search,
-                                fragmentChannel, FRAGMENT_CHANNEL);
-                        fragmentTransaction.addToBackStack(FRAGMENT_CHANNEL);
-                        fragmentTransaction.commit();
+
+                        FragmentChannel fragmentChannel = (FragmentChannel) getActivity().getSupportFragmentManager().findFragmentByTag(FRAGMENT_CHANNEL);
+                            fragmentTransaction =
+                                    getActivity().getSupportFragmentManager().beginTransaction();
+                            fragmentChannel = new FragmentChannel(listItemVideo.get(position).getIdChannel() + "", getActivity());
+                            fragmentTransaction.add(R.id.cl_contains_search,
+                                    fragmentChannel, FRAGMENT_CHANNEL);
+                            fragmentTransaction.addToBackStack(FRAGMENT_CHANNEL);
+                            fragmentTransaction.commit();
                     }
 
                     @Override
@@ -366,6 +364,7 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
     }
 
     public void mapping(@NonNull View view) {
+//        clChannelSearch = view.findViewById(R.id.cl_contains_search);
         ivLoadMore = view.findViewById(R.id.iv_load_more);
         rfMain = view.findViewById(R.id.rf_layout_main);
         pbLoadListVideoMain = view.findViewById(R.id.pb_load_list_video_main);
