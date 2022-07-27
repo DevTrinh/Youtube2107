@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
             fragmentValueSearch.setArguments(bundle);
             fragmentTransaction.add(R.id.cl_contains_search,
                     fragmentValueSearch, FRAGMENT_SEARCH);
-            fragmentTransaction.addToBackStack(FRAGMENT_SEARCH);
             fragmentTransaction.commit();
         } else if (idChannel != null) {
             Toast.makeText(this, idChannel + "", Toast.LENGTH_SHORT).show();
@@ -143,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
 //                    }
 //                }
 //                Toast.makeText(this, "Fragment Ex", Toast.LENGTH_SHORT).show();
+                Fragment fragmentSearch = getSupportFragmentManager().findFragmentByTag(FRAGMENT_SEARCH);
                 Fragment fragmentChannel = getSupportFragmentManager().findFragmentByTag(FRAGMENT_CHANNEL);
                 if (fragmentChannel != null){
                     Log.d("fragmentChannel != null", fragmentChannel+"");
@@ -160,10 +160,57 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
                     else{
                         Log.d("REMOVE: ", "ragmentManager.beginTransaction().remove(fragmentChannel);");
                         getSupportFragmentManager().beginTransaction().remove(fragmentChannel).commit();
+                        Fragment fragmentHome = getSupportFragmentManager().findFragmentByTag(FRAGMENT_HOME);
+                        if (fragmentHome == null){
+                            fragmentTransaction = fragmentManager.beginTransaction();
+                            //ADD FRAGMENT
+                            fragmentHome = new FragmentHome();
+                            fragmentTransaction.replace(R.id.cl_contains_fragment,
+                                    fragmentHome, FRAGMENT_HOME);
+                            fragmentTransaction.addToBackStack(FRAGMENT_HOME);
+                        }
+                        fragmentManager.popBackStack(FRAGMENT_HOME, 0);
+                    }
+                }
+
+                else if(fragmentSearch != null){
+                    Log.d("fragmentChannel != null", fragmentSearch+"");
+                    if (!isHomeDisplay){
+                        Log.d("!isHomeDisplay", fragmentSearch+"");
+                        fragmentManager.beginTransaction().remove(fragmentSearch).commit();
+                        clChannelSearch.setVisibility(View.VISIBLE);
+                        fragmentManager.popBackStack(FRAGMENT_HOME, 0);
+                    }
+                    else if(clChannelSearch.getVisibility() == View.GONE){
+                        Log.d("fragment channel "," clChannelSearch.getVisibility() == View.GONE");
+                        clChannelSearch.setVisibility(View.VISIBLE);
+                        isHomeDisplay = false;
+                    }
+                    else{
+                        Log.d("REMOVE: ", "ragmentManager.beginTransaction().remove(fragmentChannel);");
+                        getSupportFragmentManager().beginTransaction().remove(fragmentSearch).commit();
+                        Fragment fragmentHome = getSupportFragmentManager().findFragmentByTag(FRAGMENT_HOME);
+                        if (fragmentHome == null){
+                            fragmentTransaction = fragmentManager.beginTransaction();
+                            //ADD FRAGMENT
+                            fragmentHome = new FragmentHome();
+                            fragmentTransaction.replace(R.id.cl_contains_fragment,
+                                    fragmentHome, FRAGMENT_HOME);
+                            fragmentTransaction.addToBackStack(FRAGMENT_HOME);
+                        }
                         fragmentManager.popBackStack(FRAGMENT_HOME, 0);
                     }
                 }
                 else{
+                    Fragment fragmentHome = getSupportFragmentManager().findFragmentByTag(FRAGMENT_HOME);
+                    if (fragmentHome == null){
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        //ADD FRAGMENT
+                        fragmentHome = new FragmentHome();
+                        fragmentTransaction.replace(R.id.cl_contains_fragment,
+                                fragmentHome, FRAGMENT_HOME);
+                        fragmentTransaction.addToBackStack(FRAGMENT_HOME);
+                    }
                     Log.d("fragmentChannel == null", "1");
                     fragmentManager.popBackStack(FRAGMENT_HOME, 0);
                 }
@@ -232,7 +279,8 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
 
     public void temporaryFragment(){
         Fragment fragmentChannel = fragmentManager.findFragmentByTag(FRAGMENT_CHANNEL);
-        if (fragmentChannel != null){
+        Fragment fragmentSearch = fragmentManager.findFragmentByTag(FRAGMENT_SEARCH);
+        if (fragmentChannel != null || fragmentSearch != null){
             if (clChannelSearch.getVisibility() == View.VISIBLE){
                 clChannelSearch.setVisibility(View.GONE);
             }
@@ -257,24 +305,28 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
 
     @Override
     public void onBackPressed() {
-//        Log.d("VISIBLE: ", clChannelSearch.getVisibility()+"");
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            removeFragment();
-            removeNav();
-            Log.d("HUHU: ",getSupportFragmentManager().getBackStackEntryCount() +"");
-            setDisplayEndNavOff();
-            fragmentTransaction = fragmentManager.beginTransaction();
-            ivEndNavHome.setImageResource(R.drawable.ic_home_on);
+        Fragment fragmentHome = getSupportFragmentManager().findFragmentByTag(FRAGMENT_HOME);
+        Fragment fragmentSearch = getSupportFragmentManager().findFragmentByTag(FRAGMENT_SEARCH);
+        Log.d("", fragmentHome+"");
+//        if (fragmentSearch == null){
+//            fragmentTransaction = fragmentManager.beginTransaction();
+//            //ADD FRAGMENT
+//            fragmentHome = new FragmentHome();
+//            fragmentTransaction.replace(R.id.cl_contains_fragment,
+//                    fragmentHome, FRAGMENT_HOME);
 //            fragmentTransaction.addToBackStack(FRAGMENT_HOME);
-//            Toast.makeText(this, "Fragment Ex", Toast.LENGTH_SHORT).show();
-            Fragment fragmentHome = fragmentManager.findFragmentByTag(FRAGMENT_HOME);
-            if (fragmentHome != null){
-                Log.d("FRAGMENT HOME: ", "fragmentHome != null");
-                fragmentManager.popBackStackImmediate(FRAGMENT_HOME, 0);
-            }
-        } else {
-            super.onBackPressed();
+//        }
+        if (fragmentSearch != null){
+            finish();
         }
+        else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStack();
+            setDisplayEndNavOff();
+            ivEndNavHome.setImageResource(R.drawable.ic_home_on);
+        }
+        Log.d("", fragmentHome+"");
+
+//        Log.d("VISIBLE: ", clChannelSearch.getVisibility()+"");
     }
 
     private void removeFragment() {

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class AdapterListInChannel extends RecyclerView.Adapter<AdapterListInChannel.ListInChannelViewHolder> {
 
     private ArrayList<ItemListVideoInChannel> listVideoInChannels = new ArrayList<>();
-    private InterfaceClickWithPosition interfaceClickWithPosition;
+    private final InterfaceClickWithPosition interfaceClickWithPosition;
 
     public AdapterListInChannel(ArrayList<ItemListVideoInChannel> listVideoInChannels,
                                 InterfaceClickWithPosition interfaceClickWithPosition) {
@@ -43,7 +43,7 @@ public class AdapterListInChannel extends RecyclerView.Adapter<AdapterListInChan
         ItemListVideoInChannel itemListVideoInChannel = listVideoInChannels.get(position);
         Picasso.get().load(itemListVideoInChannel.getUrlImageList()).into(holder.ivList);
         holder.tvList.setText(itemListVideoInChannel.getTitleList());
-        holder.tvNumberVideo.setText(itemListVideoInChannel.getNumberVideo()+ " videos");
+        holder.tvNumberVideo.setText(itemListVideoInChannel.getNumberVideo() + " videos");
         holder.tvNumberVideoInImg.setText(itemListVideoInChannel.getNumberVideo());
         holder.tvTitleChannel.setText(itemListVideoInChannel.getTitleChannel());
         holder.clContainsListInChannel.setOnClickListener(new View.OnClickListener() {
@@ -63,20 +63,21 @@ public class AdapterListInChannel extends RecyclerView.Adapter<AdapterListInChan
 
     @Override
     public int getItemCount() {
-        if (listVideoInChannels == null){
+        if (listVideoInChannels == null) {
             return 0;
         }
         return listVideoInChannels.size();
     }
 
-    public class ListInChannelViewHolder extends RecyclerView.ViewHolder{
-        private ConstraintLayout clContainsListInChannel;
-        private ImageView ivList;
-        private TextView tvList;
-        private TextView tvNumberVideoInImg;
-        private TextView tvTitleChannel;
-        private TextView tvNumberVideo;
-        private ImageView ivMenuVertical;
+    public static class ListInChannelViewHolder extends RecyclerView.ViewHolder {
+        private final ConstraintLayout clContainsListInChannel;
+        private final ImageView ivList;
+        private final TextView tvList;
+        private final TextView tvNumberVideoInImg;
+        private final TextView tvTitleChannel;
+        private final TextView tvNumberVideo;
+        private final ImageView ivMenuVertical;
+
         public ListInChannelViewHolder(@NonNull View itemView) {
             super(itemView);
             ivMenuVertical = itemView.findViewById(R.id.iv_menu_right_list_channel);

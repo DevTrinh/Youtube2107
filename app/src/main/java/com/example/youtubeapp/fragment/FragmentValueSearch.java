@@ -258,7 +258,7 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
         requestQueue.add(jsonObjectRequest);
     }
 
-    private void backSearch() {
+    public void backSearch() {
         ActivitySearchVideo.adapterHistorySearch.notifyItemChanged(0);
         getActivity().finish();
         Toast.makeText(getActivity(), "BACK", Toast.LENGTH_SHORT).show();

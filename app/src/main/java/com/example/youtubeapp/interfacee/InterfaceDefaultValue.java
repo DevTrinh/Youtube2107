@@ -2,11 +2,11 @@ package com.example.youtubeapp.interfacee;
 
 public interface InterfaceDefaultValue {
     //    String API_YOUTUBE_MAIN_VIDEO_VN = "https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=50&regionCode=VN&key=AIzaSyDA2oRYCsTyVd6u5y1ypfda19b-fQZ_7VQ";
-    String API_YOUTUBE_MAIN_VIDEO = "https://youtube.googleapis.com/youtube/v3/videos?part=id&part=liveStreamingDetails&part=snippet&part=statistics&chart=mostPopular&maxResults=50&key=AIzaSyDvtp6EB_2Np2U8_oGkjRB4ec_PTjockEs";
+    String API_YOUTUBE_MAIN_VIDEO = "https://youtube.googleapis.com/youtube/v3/videos?part=id&part=liveStreamingDetails&part=snippet&part=statistics&chart=mostPopular&maxResults=50&key=AIzaSyConOa6ZAJF-Z9uSIoZMQqDzf0Et5cr9sk";
     String API_IMAGE_CHANNEL_YOUTUBE = "https://www.googleapis.com/youtube/v3/channels?part=snippet&id=UCwppdrjsBPAZg5_cUwQjfMQ&fields=items%2Fsnippet%2Fthumbnails&key=AIzaSyDA2oRYCsTyVd6u5y1ypfda19b-fQZ_7VQ";
     //    String infovideo  ... https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&maxResults=100&videoId=_VB39Jo8mAQ&key=AIzaSyDA2oRYCsTyVd6u5y1ypfda19b-fQZ_7VQ
     String API_YOUTUBE_EXPLORE = "https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=50&regionCode=VN&key=AIzaSyDA2oRYCsTyVd6u5y1ypfda19b-fQZ_7VQ";
-    String API_KEY = "AIzaSyDvtp6EB_2Np2U8_oGkjRB4ec_PTjockEs";
+    String API_KEY = "AIzaSyConOa6ZAJF-Z9uSIoZMQqDzf0Et5cr9sk";
     String LIST_SEARCH = "https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=PL5uqQAwS_KDjAgLGiaCakwJV1f4vRnTLS&key=";
     String popular_video_inChannel = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCs2BlNkzS04Uj_qSSYEoIWA&maxResults=50&order=viewCount&key=";
 
@@ -30,6 +30,8 @@ public interface InterfaceDefaultValue {
     String CONTENT_DETAILS = "contentDetails";
     String RELATED_PLAY_LIST = "relatedPlaylists";
     String UPLOADS  = "uploads";
+    String RESOURCE_ID = "resourceId";
+
 
     String SUGGESTIONS = "suggestions";
 
@@ -50,6 +52,8 @@ public interface InterfaceDefaultValue {
     String COMMENT_COUNT = "commentCount";
     String CHANNEL_ID = "channelId";
     String HIGH = "high";
+    String MEDIUM = "medium";
+    String DEFAULT = "default";
     String SUBSCRIBE_COUNT = "subscriberCount";
     String VIDEO_COUNT = "videoCount";
 
@@ -61,6 +65,7 @@ public interface InterfaceDefaultValue {
     String FRAGMENT_NOTIFICATION = "FRAGMENT_NOTIFICATION";
     String FRAGMENT_LIBRARY = "FRAGMENT_LIBRARY";
     String FRAGMENT_CHANNEL = "FRAGMENT_CHANNEL";
+    String FRAGMENT_OPEN_LIST = "Fragment_open_list";
 
     String DATA_SEARCH = "DATA_SEARCH";
     String DESCRIPTION = "description";

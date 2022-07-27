@@ -51,7 +51,7 @@ import pl.droidsonroids.gif.GifImageView;
 public class FragmentHome extends Fragment implements InterfaceDefaultValue,
         SwipeRefreshLayout.OnRefreshListener {
     private SwipeRefreshLayout rfMain;
-    private ProgressBar pbLoadListVideoMain;
+    private GifImageView pbLoadListVideoMain;
     private GifImageView ivLoadMore;
 
     public static AdapterListHotKeys adapterListHotKeys;
@@ -74,8 +74,8 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
         mapping(view);
 
         ivLoadMore.setVisibility(View.GONE);
-
         pbLoadListVideoMain.setVisibility(View.VISIBLE);
+
 //        rfMain.setOnRefreshListener(this);
         LinearLayoutManager linearLayoutManager =
                 new LinearLayoutManager(getContext());
@@ -223,7 +223,12 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
                                     urlThumbnail = jsonStandard.getString(URL);
 //                                Log.d("THUMBNAIL "+i, urlThumbnail);
                                     JSONObject jsonStatistics = jsonItem.getJSONObject(STATISTICS);
-                                    viewCount = formatData(jsonStatistics.getInt(VIEW_COUNT)) + " views";
+                                    if (jsonStatistics.has(VIEW_COUNT)){
+                                        viewCount = formatData(jsonStatistics.getInt(VIEW_COUNT)) + " views";
+                                    }
+                                    else{
+                                        viewCount = " ";
+                                    }
 //                                Log.d("View Count: "+i, viewCount);
                                     if (jsonStatistics.has(LIKED_COUNT)) {
                                         numberLiker = formatData(jsonStatistics.getInt(LIKED_COUNT));

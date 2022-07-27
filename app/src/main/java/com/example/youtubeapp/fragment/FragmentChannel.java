@@ -28,7 +28,7 @@ import com.example.youtubeapp.ActivitySearchVideo;
 import com.example.youtubeapp.R;
 import com.example.youtubeapp.adapter.AdapterViewPagerChannel;
 import com.example.youtubeapp.interfacee.InterfaceDefaultValue;
-import com.example.youtubeapp.item.ItemInfoChannel;
+import com.example.youtubeapp.item.ItemDetailsVideo;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -36,15 +36,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Objects;
-
 
 public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
 
     private TabLayout tabLayout;
     private ViewPager2 viewPagerChannel;
     private AdapterViewPagerChannel adtViewPager;
-    private ItemInfoChannel itemInfoChannel;
+    private ItemDetailsVideo itemDetailsVideo;
     private TextView tvTitleChannel;
     private ImageView ivCancel;
     private ImageView ivSearch;
@@ -74,7 +72,7 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
         ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                getActivity().getSupportFragmentManager().popBackStack();
             }
         });
 
@@ -148,13 +146,13 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
 //                    Log.d("UPLOAD: ", urlListUpload);
 
 
-                    itemInfoChannel = new ItemInfoChannel(urlAvt, urlBanner,
+                    itemDetailsVideo = new ItemDetailsVideo(urlAvt, urlBanner,
                             timeCreateChannel, titleChannel,
                             description, urlListUpload,
                             viewCount, subscriberCount,
                             videoCount, idChannel);
 
-                    adtViewPager = new AdapterViewPagerChannel(getActivity(), itemInfoChannel);
+                    adtViewPager = new AdapterViewPagerChannel(getActivity(), itemDetailsVideo);
                     viewPagerChannel.setAdapter(adtViewPager);
                     viewPagerChannel.setOffscreenPageLimit(3);
 
@@ -180,7 +178,7 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
                                 break;
                         }
                     }).attach();
-//                    Toast.makeText(getActivity(), itemInfoChannel+"", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), itemDetailsVideo+"", Toast.LENGTH_SHORT).show();
 
                 } catch (JSONException e) {
                     e.printStackTrace();

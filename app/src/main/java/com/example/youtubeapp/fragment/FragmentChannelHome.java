@@ -14,18 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.youtubeapp.R;
 import com.example.youtubeapp.interfacee.InterfaceDefaultValue;
-import com.example.youtubeapp.item.ItemInfoChannel;
+import com.example.youtubeapp.item.ItemDetailsVideo;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONObject;
 
 public class FragmentChannelHome extends Fragment implements InterfaceDefaultValue {
 
@@ -36,10 +28,10 @@ public class FragmentChannelHome extends Fragment implements InterfaceDefaultVal
     private TextView tvSub;
     private TextView tvNumberSubs;
     private TextView tvNumberVideo;
-    private ItemInfoChannel itemInfoChannel;
+    private ItemDetailsVideo itemDetailsVideo;
 
-    public FragmentChannelHome(ItemInfoChannel itemInfoChannel) {
-        this.itemInfoChannel = itemInfoChannel;
+    public FragmentChannelHome(ItemDetailsVideo itemDetailsVideo) {
+        this.itemDetailsVideo = itemDetailsVideo;
     }
 
     @SuppressLint("SetTextI18n")
@@ -50,16 +42,16 @@ public class FragmentChannelHome extends Fragment implements InterfaceDefaultVal
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_channel_home, container, false);
         mapping(view);
-//        Log.d("NOT NULL ! ",itemInfoChannel.getIdChannel());
-        if (itemInfoChannel == null) {
+//        Log.d("NOT NULL ! ",itemDetailsVideo.getIdChannel());
+        if (itemDetailsVideo == null) {
             Toast.makeText(getContext(), "DATA INFO CHANNEL IS NULL !", Toast.LENGTH_SHORT).show();
         } else {
-            Picasso.get().load(itemInfoChannel.getUrlBanner()).into(ivBannerChannel);
-            Picasso.get().load(itemInfoChannel.getUrlAvt()).into(ivAvtChannel);
-            tvTittleChannel.setText(itemInfoChannel.getTitleChannel());
-            tvNumberSubs.setText(itemInfoChannel.getSubscriberCount());
-            tvNumberVideo.setText(itemInfoChannel.getVideoCount());
-            tvBioChannel.setText("Hi I'm " + itemInfoChannel.getTitleChannel() + " >>");
+            Picasso.get().load(itemDetailsVideo.getUrlBanner()).into(ivBannerChannel);
+            Picasso.get().load(itemDetailsVideo.getUrlAvt()).into(ivAvtChannel);
+            tvTittleChannel.setText(itemDetailsVideo.getTitleChannel());
+            tvNumberSubs.setText(itemDetailsVideo.getSubscriberCount());
+            tvNumberVideo.setText(itemDetailsVideo.getVideoCount());
+            tvBioChannel.setText("Hi I'm " + itemDetailsVideo.getTitleChannel() + " >>");
         }
 
         Log.d("NOTIFICATION: ", "Fragment Home Is Create");

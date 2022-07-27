@@ -116,6 +116,11 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
 
+        <FrameLayout
+            android:id="@+id/fl_contains_open_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </LinearLayout>

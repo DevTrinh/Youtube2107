@@ -43,7 +43,7 @@ public class DataListVideo implements InterfaceDefaultValue {
 
     public void getDetailList(Context context,
                               ArrayList<ItemListVideoInChannel> listVideoInChannels,
-                              AdapterListInChannel adapterListInChannel, String idChannel,
+                              AdapterListInChannel adapterListInChannel,
                               int start, int end, GifImageView iv){
         String url = PATH_API
                 +"playlists?part=snippet%2CcontentDetails&channelId="

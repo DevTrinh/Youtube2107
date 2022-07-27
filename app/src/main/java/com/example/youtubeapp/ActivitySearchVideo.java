@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActivitySearchVideo extends AppCompatActivity implements InterfaceDefaultValue {
+
     private static final int REQUEST_CODE_VALUE = 1000;
     private RecyclerView rvHistorySearch;
     private RecyclerView rvSuggestSearch;

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="@dimen/dp12">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_contains_video_in_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_video"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp100"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:src="@drawable/test_iv_video_channel"
+            app:layout_constraintWidth_percent="0.45"
+            android:scaleType="centerCrop"/>
+
+        <TextView
+            android:id="@+id/tv_title_video"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/iv_video"
+            app:layout_constraintLeft_toRightOf="@id/iv_video"
+            app:layout_constraintRight_toLeftOf="@id/iv_menu"
+            android:paddingLeft="@dimen/dp12"
+            android:maxLines="4"
+            android:textColor="@color/black"
+            android:ellipsize="end"
+            android:textSize="@dimen/dp14"
+            android:text="@string/v_a_h_c_v_a_nh_n_b_u_tr_i_xanh_tuy_t_p_h_c_c_ng_t_i_b_s_u_t_p_nh_c_n_n_xu_t_1_gi"/>
+
+        <ImageView
+            android:id="@+id/iv_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/tv_title_video"
+            app:layout_constraintRight_toRightOf="parent"
+            android:src="@drawable/ic_menu_vertical"/>
+
+        <TextView
+            android:id="@+id/tv_title_channel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_title_video"
+            app:layout_constraintLeft_toLeftOf="@id/tv_title_video"
+            android:paddingHorizontal="@dimen/dp12"
+            android:text="@string/pike"
+            android:textColor="@color/color51"
+            android:textSize="@dimen/dp13"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

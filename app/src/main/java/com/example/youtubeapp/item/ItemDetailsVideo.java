@@ -2,7 +2,7 @@ package com.example.youtubeapp.item;
 
 import com.example.youtubeapp.fragment.FragmentHome;
 
-public class ItemInfoChannel {
+public class ItemDetailsVideo {
     private String urlAvt;
     private String urlBanner;
     private String timeCreateChannel;
@@ -104,11 +104,11 @@ public class ItemInfoChannel {
         this.videoCount = videoCount;
     }
 
-    public ItemInfoChannel(String urlAvt, String urlBanner,
-                           String timeCreateChannel, String titleChannel,
-                           String description, String urlListUpload,
-                           String viewCount, String subscriberCount,
-                           String videoCount, String idChannel) {
+    public ItemDetailsVideo(String urlAvt, String urlBanner,
+                            String timeCreateChannel, String titleChannel,
+                            String description, String urlListUpload,
+                            String viewCount, String subscriberCount,
+                            String videoCount, String idChannel) {
         this.urlAvt = urlAvt;
         this.urlBanner = urlBanner;
         this.timeCreateChannel = timeCreateChannel;

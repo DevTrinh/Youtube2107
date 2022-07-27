@@ -59,6 +59,8 @@ public class ItemVideoInChannel {
         this.idVideo = idVideo;
     }
 
+
+
     public String getIdVideo() {
         return idVideo;
     }

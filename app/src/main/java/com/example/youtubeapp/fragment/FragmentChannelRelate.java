@@ -11,13 +11,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.youtubeapp.R;
-import com.example.youtubeapp.item.ItemInfoChannel;
+import com.example.youtubeapp.item.ItemDetailsVideo;
 
 public class FragmentChannelRelate extends Fragment {
-    private ItemInfoChannel itemInfoChannel;
+    private ItemDetailsVideo itemDetailsVideo;
 
-    public FragmentChannelRelate(ItemInfoChannel itemInfoChannel) {
-        this.itemInfoChannel = itemInfoChannel;
+    public FragmentChannelRelate(ItemDetailsVideo itemDetailsVideo) {
+        this.itemDetailsVideo = itemDetailsVideo;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

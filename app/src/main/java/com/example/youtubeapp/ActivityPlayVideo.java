@@ -90,7 +90,8 @@ public class ActivityPlayVideo extends AppCompatActivity
     private AdapterListComment adapterListComment;
 
     private AlertDialog.Builder alertDialog;
-    private ProgressBar pbLoad, pbLoadComment;
+    private GifImageView pbLoad;
+    private ProgressBar  pbLoadComment;
     private CircleImageView ivUserComment;
     private EditText etUserComment;
     private ImageView ivLiked, ivDisliked, ivShare, ivDownload, ivSave,
@@ -105,7 +106,7 @@ public class ActivityPlayVideo extends AppCompatActivity
     private ArrayList<ItemComment> listCommentNextPage = new ArrayList<>();
     private YouTubePlayerFragment youTubePlayerFragment;
 
-    private boolean numberLikeCheck = true;
+    private static boolean numberLikeCheck = true;
 
     public static String id = "";
     public static String idChannel = "";
@@ -283,7 +284,14 @@ public class ActivityPlayVideo extends AppCompatActivity
         ivDisliked.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bottomSheetDisplay(btSheetComment);
+                if (numberLikeCheck) {
+                    ivDisliked.setImageResource(drawable.ic_dislike_on);
+                    ivLiked.setImageResource(drawable.ic_like);
+                    numberLikeCheck = false;
+                } else {
+                    ivDisliked.setImageResource(drawable.ic_dislike);
+                    numberLikeCheck = true;
+                }
             }
         });
 

@@ -76,4 +76,7 @@
     <string name="videos">Videos</string>
     <string name="_102k_views">102k views</string>
     <string name="enter_your_comment">enter your comment</string>
+    <string name="shuffle">Shuffle</string>
+    <string name="this_channel_hasn_t_posted_yet">This channel hasn\'t posted yet</string>
+    <string name="this_channel_doesn_t_future_any_other_channels">This channel doesn\'t future any other channels</string>
 </resources>

@@ -1,14 +1,11 @@
 package com.example.youtubeapp.fragment;
 
-import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,20 +24,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.youtubeapp.adapter.AdapterVideoChannelTest;
-import com.example.youtubeapp.adapter.AdapterVideoInChannel;
 import com.example.youtubeapp.R;
 import com.example.youtubeapp.interfacee.InterfaceClickWithPosition;
 import com.example.youtubeapp.interfacee.InterfaceDefaultValue;
-import com.example.youtubeapp.item.ItemInfoChannel;
+import com.example.youtubeapp.item.ItemDetailsVideo;
 import com.example.youtubeapp.item.ItemVideoInChannel;
-import com.example.youtubeapp.pagination.PaginationScrollListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import pl.droidsonroids.gif.GifImageView;
 
@@ -55,7 +49,7 @@ public class FragmentChannelVideo extends Fragment implements InterfaceDefaultVa
     //    private AdapterVideoInChannel adapterVideoInChannel;
     private AdapterVideoChannelTest adapterVideoChannelTest;
 
-    private ItemInfoChannel itemInfoChannel;
+    private ItemDetailsVideo itemDetailsVideo;
     private ArrayList<ItemVideoInChannel> listVideo = new ArrayList<>();
 
     private int positionStartLoad = 0;
@@ -67,8 +61,8 @@ public class FragmentChannelVideo extends Fragment implements InterfaceDefaultVa
 //    private int positionStart = 0, positionEnd = 8;
 
 
-    public FragmentChannelVideo(ItemInfoChannel itemInfoChannel) {
-        this.itemInfoChannel = itemInfoChannel;
+    public FragmentChannelVideo(ItemDetailsVideo itemDetailsVideo) {
+        this.itemDetailsVideo = itemDetailsVideo;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -77,11 +71,10 @@ public class FragmentChannelVideo extends Fragment implements InterfaceDefaultVa
         View view = inflater.inflate(R.layout.fragment_channel_video, container, false);
         mapping(view);
 
-        ivLoadMore.setVisibility(View.GONE);
-        pbLoadVideo.setVisibility(View.VISIBLE);
+        ivLoadMore.setImageResource(R.drawable.gif_load_more);
 
         final String url = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId="
-                + itemInfoChannel.getIdChannel()
+                + itemDetailsVideo.getIdChannel()
                 + "&maxResults=50&order=rating&type=video&key="
                 + API_KEY;
         getJsonData(url, positionStartLoad, positionEndLoad);
@@ -205,7 +198,6 @@ public class FragmentChannelVideo extends Fragment implements InterfaceDefaultVa
                         ivLoadMore.setImageResource(R.drawable.ic_arrow_down);
                         ivLoadMore.setEnabled(true);
                     }
-                    pbLoadVideo.setVisibility(View.GONE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -222,7 +214,6 @@ public class FragmentChannelVideo extends Fragment implements InterfaceDefaultVa
 
     public void mapping(@NonNull View view) {
         ivLoadMore = view.findViewById(R.id.iv_arrow_load_more);
-        pbLoadVideo = view.findViewById(R.id.pb_load_video);
         tvLive = view.findViewById(R.id.tv_live_channel);
         tvSortBy = view.findViewById(R.id.tv_sort_video);
         tvVideos = view.findViewById(R.id.tv_video_channel);
