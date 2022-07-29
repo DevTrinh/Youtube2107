@@ -36,6 +36,7 @@ import com.example.youtubeapp.R;
 import com.example.youtubeapp.adapter.AdapterValueSearchF;
 import com.example.youtubeapp.interfacee.InterfaceClickFrame;
 import com.example.youtubeapp.interfacee.InterfaceDefaultValue;
+import com.example.youtubeapp.item.ItemListVideoInChannel;
 import com.example.youtubeapp.item.ItemValueSearch;
 
 import org.json.JSONArray;
@@ -88,25 +89,12 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
                 new InterfaceClickFrame() {
                     @Override
                     public void onClickTitle(int position) {
-                        if (listValueSearch.get(position).getKind().equals(KIND_VIDEO)) {
-                            /*IMAGEVIEW ONCLICK*/
-                            Log.d("TITLE ON CLICK: " + position,
-                                    listValueSearch.get(position).getTitle());
-                            intentSearchToPlayVideo.putExtra(VALUE_SEARCH,
-                                    listValueSearch.get(position));
-                            Log.d(listValueSearch.get(position).getIdListVideo(), "HUHUH");
-//                        startActivity(intentSearchToPlayVideo);
-                        }
+                        onClickKind(position);
                     }
 
                     @Override
                     public void onClickImage(int position) {
-                        /*TITTLE ONCLICK*/
-                        Log.d("IMAGE VIEW ON CLICK: " + position,
-                                listValueSearch.get(position).getTitle());
-                        intentSearchToPlayVideo.putExtra(VALUE_SEARCH,
-                                listValueSearch.get(position));
-                        startActivity(intentSearchToPlayVideo);
+                        onClickKind(position);
                     }
 
                     @Override
@@ -122,6 +110,8 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
                     public void onClickAvtChannel(int position) {
                         Log.d("CHANNEL VIDEO: " + position,
                                 listValueSearch.get(position).getTitle());
+
+                        displayChannel(position);
                     }
 
                     @Override
@@ -173,11 +163,43 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
         return view;
     }
 
+    private void onClickKind (int position){
+        if (listValueSearch.get(position).getKind().equals(KIND_VIDEO)) {
+            /*IMAGEVIEW ONCLICK*/
+            Log.d("TITLE ON CLICK: " + position,
+                    listValueSearch.get(position).getTitle());
+            intentSearchToPlayVideo.putExtra(VALUE_SEARCH,
+                    listValueSearch.get(position));
+            Log.d(listValueSearch.get(position).getIdListVideo(), "HUHUH");
+                        startActivity(intentSearchToPlayVideo);
+        }
+        else if (listValueSearch.get(position).getKind().equals(KIND_LIST)){
+            String idList = listValueSearch.get(position).getIdListVideo();
+            String titleList = listValueSearch.get(position).getTitle();
+            String urlImageList = listValueSearch.get(position).getUrlImage();
+            String titleChannel = listValueSearch.get(position).getChannelTitle();
+            String numberVideo = listValueSearch.get(position).getNumberVideoList();
+            String describe = listValueSearch.get(position).getDescription();
+
+            ItemListVideoInChannel itemListVideoInChannel = new ItemListVideoInChannel(
+                    idList, titleList, urlImageList,
+                    titleChannel, numberVideo, describe);
+
+            /*TITTLE ONCLICK*/
+            Log.d("ID CHANNEL: ", listValueSearch.get(position).getIdListVideo());
+            FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
+            FragmentVideoList fragmentVideoList = new FragmentVideoList(itemListVideoInChannel);
+            fragmentTransaction.add(R.id.fr_home_contains_list, fragmentVideoList, FRAGMENT_OPEN_LIST);
+            fragmentTransaction.addToBackStack(FRAGMENT_OPEN_LIST);
+            fragmentTransaction.commit();
+        }
+    }
+
     private void displayChannel(int position) {
         FragmentTransaction fragmentTransaction =
                 getActivity().getSupportFragmentManager().beginTransaction();
         FragmentChannel fragmentChannel = new FragmentChannel(listValueSearch.get(position).getChannelId(), getContext());
-        fragmentTransaction.replace(R.id.cl_contains_search,
+        fragmentTransaction.add(R.id.cl_contains_search,
                 fragmentChannel, FRAGMENT_CHANNEL);
         fragmentTransaction.addToBackStack(FRAGMENT_CHANNEL);
         fragmentTransaction.commit();
@@ -260,12 +282,12 @@ public class FragmentValueSearch extends Fragment implements InterfaceDefaultVal
 
     public void backSearch() {
         ActivitySearchVideo.adapterHistorySearch.notifyItemChanged(0);
-        getActivity().finish();
+        requireActivity().finish();
         Toast.makeText(getActivity(), "BACK", Toast.LENGTH_SHORT).show();
     }
 
     private void getJsonValueSearch(String API_SEARCH, int start, int end) {
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 API_SEARCH, null, new Response.Listener<JSONObject>() {
             @RequiresApi(api = Build.VERSION_CODES.O)

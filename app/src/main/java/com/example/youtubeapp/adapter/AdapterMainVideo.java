@@ -13,47 +13,44 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.youtubeapp.R;
 import com.example.youtubeapp.interfacee.InterfaceClickFrame;
-import com.example.youtubeapp.item.ItemVideoMain;
 import com.example.youtubeapp.item.ItemVideoMainn;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+public class AdapterMainVideo extends
+        RecyclerView.Adapter<AdapterMainVideo.ItemVideoMainnViewHolder> {
 
-public class AdapterMainVideoYoutube extends
-        RecyclerView.Adapter<AdapterMainVideoYoutube.ItemVideoMainViewHolder> {
-
-    private ArrayList<ItemVideoMain> listItemVideoMain;
+    private ArrayList<ItemVideoMainn> listItemVideoMainn;
     private InterfaceClickFrame interfaceClickFrame;
 
-    public AdapterMainVideoYoutube(ArrayList<ItemVideoMain> listItemVideoMain,
-                                   InterfaceClickFrame interfaceClickFrame) {
-        this.listItemVideoMain = listItemVideoMain;
+    public AdapterMainVideo(ArrayList<ItemVideoMainn> listItemVideoMainn,
+                            InterfaceClickFrame interfaceClickFrame) {
+        this.listItemVideoMainn = listItemVideoMainn;
         this.interfaceClickFrame = interfaceClickFrame;
     }
 
     @NonNull
     @Override
-    public ItemVideoMainViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ItemVideoMainnViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_video, parent, false);
-        return new ItemVideoMainViewHolder(view);
+        return new ItemVideoMainnViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemVideoMainViewHolder holder,
+    public void onBindViewHolder(@NonNull ItemVideoMainnViewHolder holder,
                                  @SuppressLint("RecyclerView") int position) {
-        ItemVideoMain itemVideoMain = listItemVideoMain.get(position);
+        ItemVideoMainn itemVideoMain = listItemVideoMainn.get(position);
         if (itemVideoMain == null) {
             return;
         }
-        Picasso.get().load(itemVideoMain.getUrlAvtChannel()).into(holder.ivAvtChannel);
-        Picasso.get().load(itemVideoMain.getIvVideo()).into(holder.youTubeThumbnailView);
-        holder.tvTitleMainItem.setText(itemVideoMain.getTvTitleVideo());
-        holder.tvTimeUp.setText(itemVideoMain.getTvTimeUp());
-        holder.tvNameChannel.setText(itemVideoMain.getTvNameChannel());
-        holder.tvViewer.setText(itemVideoMain.getTvViewCount());
+        Picasso.get().load(itemVideoMain.getUrlImageChannel()).into(holder.ivAvtChannel);
+        Picasso.get().load(itemVideoMain.getUrlImage()).into(holder.youTubeThumbnailView);
+        holder.tvTitleMainItem.setText(itemVideoMain.getTitleVideo());
+        holder.tvTimeUp.setText(itemVideoMain.getTimeUp());
+        holder.tvNameChannel.setText(itemVideoMain.getTitleChannel());
+        holder.tvViewer.setText(itemVideoMain.getViewer());
 
 
         holder.youTubeThumbnailView.setOnClickListener(new View.OnClickListener() {
@@ -86,18 +83,18 @@ public class AdapterMainVideoYoutube extends
 
     @Override
     public int getItemCount() {
-        if (listItemVideoMain == null) {
+        if (listItemVideoMainn == null) {
             return 0;
         }
-        return listItemVideoMain.size();
+        return listItemVideoMainn.size();
     }
 
-    public class ItemVideoMainViewHolder extends RecyclerView.ViewHolder {
+    public class ItemVideoMainnViewHolder extends RecyclerView.ViewHolder {
         ImageView youTubeThumbnailView;
         ImageView ivAvtChannel, ivMenuVertical;
         TextView tvTitleMainItem, tvNameChannel, tvViewer, tvTimeUp;
 
-        public ItemVideoMainViewHolder(@NonNull View itemView) {
+        public ItemVideoMainnViewHolder(@NonNull View itemView) {
             super(itemView);
             mapping(itemView);
         }

@@ -4,7 +4,6 @@ import static com.example.youtubeapp.R.*;
 import static com.example.youtubeapp.fragment.FragmentHome.formatData;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -24,13 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,7 +35,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.youtubeapp.adapter.AdapterListComment;
 import com.example.youtubeapp.adapter.AdapterMainVideoYoutube;
-import com.example.youtubeapp.fragment.FragmentChannel;
 import com.example.youtubeapp.fragment.FragmentMenuItemVideoMain;
 import com.example.youtubeapp.interfacee.InterfaceClickFrame;
 import com.example.youtubeapp.interfacee.InterfaceDefaultValue;
@@ -50,7 +42,6 @@ import com.example.youtubeapp.item.ItemComment;
 import com.example.youtubeapp.item.ItemValueSearch;
 import com.example.youtubeapp.item.ItemVideoMain;
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -163,7 +154,7 @@ public class ActivityPlayVideo extends AppCompatActivity
 //            tvCountLiked.setText(itemValueSearch.);
 //            tvNumberComment.setText(itemValueSearch.getC);
             tvNameChannel.setText(itemValueSearch.getChannelTitle());
-            description = itemValueSearch.getDescriptionVideo();
+            description = itemValueSearch.getDescription();
             urlAvtChannel = itemValueSearch.getUrlAvtChannel();
 //            tvNumberSubscriber.setText(itemValueSearch.get);
             Picasso.get().load(itemValueSearch.getUrlAvtChannel()).into(ivAvtChannel);
@@ -476,7 +467,7 @@ public class ActivityPlayVideo extends AppCompatActivity
 
     private void setDataComment(String idVideo, int start, int end) {
         String API_LIST_COMMENT_VIDEO =
-                "https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=100&order=relevance&textFormat=plainText&videoId=" +
+                        PATH_API+"commentThreads?part=snippet&maxResults=100&order=relevance&textFormat=plainText&videoId=" +
                         idVideo + "&key="
                         + API_KEY + "&fbclid=IwAR3WPsV7YUhleTcSEzTMCEQKKqMokxOUqwFEO41ELUw0s7TVhUjmaSRmlAg";
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -499,7 +490,7 @@ public class ActivityPlayVideo extends AppCompatActivity
                         endItem = jsonItems.length();
                         isCheckLastItem = false;
                     }
-                    Log.d("FALSE: " + endItem, isCheckLastItem + "");
+//                    Log.d("FALSE: " + endItem, isCheckLastItem + "");
 
                     if (start < endItem) {
 //                    Log.d("AAAAAAAAAAAA", jsonItems.length() + "");

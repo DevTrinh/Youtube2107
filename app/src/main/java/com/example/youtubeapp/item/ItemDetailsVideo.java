@@ -14,6 +14,16 @@ public class ItemDetailsVideo {
     private String videoCount;
     private String idChannel;
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    private String country;
+
     public String getIdChannel() {
         return idChannel;
     }
@@ -108,7 +118,7 @@ public class ItemDetailsVideo {
                             String timeCreateChannel, String titleChannel,
                             String description, String urlListUpload,
                             String viewCount, String subscriberCount,
-                            String videoCount, String idChannel) {
+                            String videoCount, String idChannel, String country) {
         this.urlAvt = urlAvt;
         this.urlBanner = urlBanner;
         this.timeCreateChannel = timeCreateChannel;
@@ -119,5 +129,6 @@ public class ItemDetailsVideo {
         this.subscriberCount = subscriberCount;
         this.videoCount = videoCount;
         this.idChannel = idChannel;
+        this.country = country;
     }
 }

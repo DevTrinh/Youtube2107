@@ -79,4 +79,6 @@
     <string name="shuffle">Shuffle</string>
     <string name="this_channel_hasn_t_posted_yet">This channel hasn\'t posted yet</string>
     <string name="this_channel_doesn_t_future_any_other_channels">This channel doesn\'t future any other channels</string>
+    <string name="description">Description</string>
+    <string name="more_info">More Info</string>
 </resources>

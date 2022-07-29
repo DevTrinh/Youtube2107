@@ -1,12 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="@dimen/dp12">
 
     <TextView
+        android:id="@+id/tv_description"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Fragment About"
-        android:textSize="@dimen/dp32"/>
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/description"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dp20"
+        android:textColorLink="@color/color065fd4"
+        android:textStyle="bold"
+        android:linksClickable="true"
+        android:autoLink="all"/>
+
+    <TextView
+        android:id="@+id/tv_description_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_description"
+        app:layout_constraintLeft_toLeftOf="@id/tv_description"
+        android:layout_marginTop="@dimen/dp12"
+        android:linksClickable="true"
+        android:textColorLink="@color/color065fd4"
+        android:autoLink="all"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dp15"/>
+
+    <TextView
+        android:id="@+id/tv_more_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_description_details"
+        app:layout_constraintLeft_toLeftOf="@+id/tv_description_details"
+        android:layout_marginTop="@dimen/dp12"
+        android:text="@string/more_info"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dp20"/>
+
+
+    <TextView
+        android:id="@+id/tv_link_channel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_more_info"
+        app:layout_constraintLeft_toLeftOf="@id/tv_more_info"
+        android:layout_marginTop="@dimen/dp12"
+        android:drawablePadding="@dimen/dp12"
+        android:drawableLeft="@drawable/ic_link24"
+        android:textSize="@dimen/dp15"
+        android:text="https://www.youtube.com/c/Sontungmtp"
+        android:linksClickable="true"
+        android:autoLink="all"
+        android:gravity="center_vertical"
+        android:textColorLink="@color/color065fd4"/>
+
+    <TextView
+        android:id="@+id/tv_country_channel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_link_channel"
+        app:layout_constraintLeft_toLeftOf="@id/tv_link_channel"
+        android:layout_marginTop="@dimen/dp12"
+        android:drawablePadding="@dimen/dp12"
+        android:drawableLeft="@drawable/ic_location24"
+        android:textSize="@dimen/dp15"
+        android:text="VN"
+        android:textColor="@color/black"
+        android:linksClickable="true"
+        android:autoLink="all"
+        android:gravity="center_vertical"
+        android:textColorLink="@color/color065fd4"/>
+
+    <TextView
+        android:id="@+id/tv_time_register_channel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_country_channel"
+        app:layout_constraintLeft_toLeftOf="@id/tv_country_channel"
+        android:layout_marginTop="@dimen/dp12"
+        android:drawablePadding="@dimen/dp12"
+        android:drawableLeft="@drawable/ic_round_exclamation_mark"
+        android:textSize="@dimen/dp15"
+        android:text="Joined Jan 21, 2015"
+        android:textColor="@color/black"
+        android:linksClickable="true"
+        android:autoLink="all"
+        android:gravity="center_vertical"
+        android:textColorLink="@color/color065fd4"/>
+
+    <TextView
+        android:id="@+id/tv_view_channel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_time_register_channel"
+        app:layout_constraintLeft_toLeftOf="@id/tv_time_register_channel"
+        android:layout_marginTop="@dimen/dp12"
+        android:drawablePadding="@dimen/dp12"
+        android:drawableLeft="@drawable/ic_growth24"
+        android:textSize="@dimen/dp15"
+        android:text="2,314,823,150 views"
+        android:textColor="@color/black"
+        android:gravity="center_vertical" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -83,7 +83,7 @@ public class ItemValueSearch implements Serializable {
         this.titleVideo = titleVideo;
     }
 
-    public String getDescriptionVideo() {
+    public String getDescription() {
         return descriptionVideo;
     }
 

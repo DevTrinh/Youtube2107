@@ -66,13 +66,15 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
 
         final String urlInfoChannel = "https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics%2C%20brandingSettings&id="
                 + idChannel + "&maxResults=50&key=" + API_KEY;
+        Log.d("LINK: ", urlInfoChannel);
 
         getJsonData(urlInfoChannel);
 
         ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().popBackStack();
+                Fragment fragmentHome = requireActivity().getSupportFragmentManager().findFragmentByTag(FRAGMENT_HOME);
+                    requireActivity().getSupportFragmentManager().popBackStack();
             }
         });
 
@@ -102,6 +104,7 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
             String subscriberCount;
             String videoCount;
             String idChannel;
+            String country;
 
             @SuppressLint("UseRequireInsteadOfGet")
             @Override
@@ -116,6 +119,12 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
                     JSONObject jsonSnippet = jsonItem.getJSONObject(SNIPPET);
                     titleChannel = jsonSnippet.getString(TITLE);
                     tvTitleChannel.setText(titleChannel);
+                    if (jsonSnippet.has(COUNTRY)){
+                        country = jsonSnippet.getString(COUNTRY);
+                    }
+                    else{
+                        country = "channel owner does not set country";
+                    }
 //                    Log.d("TITLE:  ", titleChannel);
 
                     description = jsonSnippet.getString(DESCRIPTION);
@@ -150,7 +159,7 @@ public class FragmentChannel extends Fragment implements InterfaceDefaultValue {
                             timeCreateChannel, titleChannel,
                             description, urlListUpload,
                             viewCount, subscriberCount,
-                            videoCount, idChannel);
+                            videoCount, idChannel, country);
 
                     adtViewPager = new AdapterViewPagerChannel(getActivity(), itemDetailsVideo);
                     viewPagerChannel.setAdapter(adtViewPager);

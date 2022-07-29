@@ -2,6 +2,7 @@ package com.example.youtubeapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -24,18 +25,35 @@ import com.example.youtubeapp.fragment.FragmentNotify;
 import com.example.youtubeapp.fragment.FragmentSubs;
 import com.example.youtubeapp.fragment.FragmentValueSearch;
 import com.example.youtubeapp.interfacee.InterfaceDefaultValue;
+import com.example.youtubeapp.interfacee.InterfaceSenData;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerFragment;
 
-public class MainActivity extends AppCompatActivity implements InterfaceDefaultValue {
+public class MainActivity extends AppCompatActivity implements
+        YouTubePlayer.OnInitializedListener,InterfaceDefaultValue {
 
     private ImageView ivEndNavHome, ivEndNavExplore,
             ivEndNavSubscriptions, ivEndNavNotification,
             ivEndNavLibrary, ivSearch, ivUser, ivDataTrans;
+
+    private YouTubePlayer ypPlayItemClick;
+    public String id = "";
+
     public FragmentManager fragmentManager = getSupportFragmentManager();
     public static FragmentTransaction fragmentTransaction;
 
     public FrameLayout clChannelSearch;
+    private YouTubePlayerFragment youTubePlayerFragment;
+    public static BottomSheetBehavior btSheetPlay;
+
+    public static ConstraintLayout clPlay;
+    public InterfaceSenData interfaceSenData;
 
     private boolean isHomeDisplay = true;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +63,11 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
         startActivity(intent)*/;
 
         mapping();
+
+        youTubePlayerFragment = (YouTubePlayerFragment) getFragmentManager()
+                .findFragmentById(R.id.fm_contains_player_views);
+
+        youTubePlayerFragment.initialize(API_KEY, this);
 
         Intent getData = getIntent();
         String valueSearch = getData.getStringExtra(VALUE_SEARCH);
@@ -62,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
             fragmentValueSearch.setArguments(bundle);
             fragmentTransaction.add(R.id.cl_contains_search,
                     fragmentValueSearch, FRAGMENT_SEARCH);
+            fragmentTransaction.addToBackStack(FRAGMENT_SEARCH);
+
             fragmentTransaction.commit();
         } else if (idChannel != null) {
             Toast.makeText(this, idChannel + "", Toast.LENGTH_SHORT).show();
@@ -81,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
             fragmentTransaction.addToBackStack(FRAGMENT_HOME);
             fragmentTransaction.commit();
         }
+
 
         ivUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +132,18 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
         });
     }
 
+    public void playVideo(String id){
+        this.id = id;
+        btSheetPlay  = BottomSheetBehavior.from(clPlay);
+        if (btSheetPlay.getState() != BottomSheetBehavior.STATE_EXPANDED){
+            btSheetPlay.setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
+        else{
+            btSheetPlay.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+
+    }
+
     private void openOnClickUser() {
         FragmentBtSheetUser fragmentBtSheetUser = new FragmentBtSheetUser();
         fragmentBtSheetUser.show(getSupportFragmentManager(), fragmentBtSheetUser.getTag());
@@ -118,44 +156,14 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
                 setDisplayEndNavOff();
                 ivEndNavHome.setImageResource(R.drawable.ic_home_on);
                 removeNav();
-//                Log.d("String drawable: ", s+"");
-//                if (s.equals(R.drawable.ic_home_on+"")){
-//                    removeFragment();
-//                    fragmentManager.popBackStack(FRAGMENT_HOME, 0);
-//                    Log.d("HUHU: ", "HEHE");
-//                }
-//                else{
-//                    ivEndNavHome.setImageResource(R.drawable.ic_home_on);
-//
-////                fragmentTransaction.replace(R.id.cl_contains_fragment, fragmentHome, FRAGMENT_HOME);
-////                fragmentTransaction.addToBackStack(FRAGMENT_HOME);
-//                    FragmentChannel fragmentChannel = (FragmentChannel) fragmentManager.findFragmentByTag(FRAGMENT_CHANNEL);
-//                    if (fragmentChannel == null){
-//                        Log.d("NULL,", "AHIHI");
-//                        fragmentManager.popBackStack(FRAGMENT_HOME, 0);
-//                    }
-//                    else {
-//                        Log.d("NOT NULL,", "AHIHI");
-////                        fragmentManager.beginTransaction().remove(fragmentChannel);
-////                        fragmentChannel = (FragmentChannel) fragmentManager.findFragmentByTag(FRAGMENT_CHANNEL);
-////                        fragmentManager.popBackStack(FRAGMENT_CHANNEL, 0);
-//                    }
-//                }
-//                Toast.makeText(this, "Fragment Ex", Toast.LENGTH_SHORT).show();
+
                 Fragment fragmentSearch = getSupportFragmentManager().findFragmentByTag(FRAGMENT_SEARCH);
                 Fragment fragmentChannel = getSupportFragmentManager().findFragmentByTag(FRAGMENT_CHANNEL);
                 if (fragmentChannel != null){
                     Log.d("fragmentChannel != null", fragmentChannel+"");
-                    if (!isHomeDisplay){
-                        Log.d("!isHomeDisplay", fragmentChannel+"");
-                        fragmentManager.beginTransaction().remove(fragmentChannel).commit();
+                    if(clChannelSearch.getVisibility() == View.GONE){
+                        Log.d("fragment channel "," clChannelSearch.getVisibility() == View.VISIBLE");
                         clChannelSearch.setVisibility(View.VISIBLE);
-                        fragmentManager.popBackStack(FRAGMENT_HOME, 0);
-                    }
-                    else if(clChannelSearch.getVisibility() == View.GONE){
-                        Log.d("fragment channel "," clChannelSearch.getVisibility() == View.GONE");
-                        clChannelSearch.setVisibility(View.VISIBLE);
-                        isHomeDisplay = false;
                     }
                     else{
                         Log.d("REMOVE: ", "ragmentManager.beginTransaction().remove(fragmentChannel);");
@@ -168,8 +176,12 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
                             fragmentTransaction.replace(R.id.cl_contains_fragment,
                                     fragmentHome, FRAGMENT_HOME);
                             fragmentTransaction.addToBackStack(FRAGMENT_HOME);
+                            Log.d("CREATE: ", "FRAGMENT HOME");
                         }
-                        fragmentManager.popBackStack(FRAGMENT_HOME, 0);
+                        else{
+                            fragmentManager.popBackStack(FRAGMENT_HOME, 0);
+                            Log.d("POP BACK: ", "0");
+                        }
                     }
                 }
 
@@ -178,8 +190,20 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
                     if (!isHomeDisplay){
                         Log.d("!isHomeDisplay", fragmentSearch+"");
                         fragmentManager.beginTransaction().remove(fragmentSearch).commit();
-                        clChannelSearch.setVisibility(View.VISIBLE);
-                        fragmentManager.popBackStack(FRAGMENT_HOME, 0);
+                        clChannelSearch.setVisibility(View.GONE);
+                        Fragment fragmentHome = getSupportFragmentManager().findFragmentByTag(FRAGMENT_HOME);
+                        if (fragmentHome != null){
+                            fragmentManager.popBackStack(FRAGMENT_HOME, 0);
+                        }
+                        else{
+                            fragmentTransaction = fragmentManager.beginTransaction();
+                            //ADD FRAGMENT
+                            fragmentHome = new FragmentHome();
+                            fragmentTransaction.replace(R.id.cl_contains_fragment,
+                                    fragmentHome, FRAGMENT_HOME);
+                            fragmentTransaction.addToBackStack(FRAGMENT_HOME);
+                            Log.d("ADD BACK: ", "FRAGMENT HOME");
+                        }
                     }
                     else if(clChannelSearch.getVisibility() == View.GONE){
                         Log.d("fragment channel "," clChannelSearch.getVisibility() == View.GONE");
@@ -210,10 +234,12 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
                         fragmentTransaction.replace(R.id.cl_contains_fragment,
                                 fragmentHome, FRAGMENT_HOME);
                         fragmentTransaction.addToBackStack(FRAGMENT_HOME);
+                        Log.d("ADD BACK: ", "FRAGMENT HOME");
                     }
-                    Log.d("fragmentChannel == null", "1");
                     fragmentManager.popBackStack(FRAGMENT_HOME, 0);
+                    Log.d("POP BACK: ", "1");
                 }
+
                 break;
 
             case R.id.iv_end_bar_explore:
@@ -271,12 +297,6 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
         fragmentTransaction.commit();
     }
 
-//    public void manageFragment(String TAG_FRAGMENT){
-//        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT);
-//        if(fragment != null)
-//            getSupportFragmentManager().beginTransaction().add(fragment, FRAGMENT_HOME).commit();
-//    }
-
     public void temporaryFragment(){
         Fragment fragmentChannel = fragmentManager.findFragmentByTag(FRAGMENT_CHANNEL);
         Fragment fragmentSearch = fragmentManager.findFragmentByTag(FRAGMENT_SEARCH);
@@ -295,9 +315,11 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
         if (fragmentSubs != null){
             getSupportFragmentManager().beginTransaction().remove(fragmentSubs).commit();
         }
+
         if (fragmentLibrary != null){
             getSupportFragmentManager().beginTransaction().remove(fragmentLibrary).commit();
         }
+
         if (fragmentNotify != null){
             getSupportFragmentManager().beginTransaction().remove(fragmentNotify).commit();
         }
@@ -308,36 +330,18 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
         Fragment fragmentHome = getSupportFragmentManager().findFragmentByTag(FRAGMENT_HOME);
         Fragment fragmentSearch = getSupportFragmentManager().findFragmentByTag(FRAGMENT_SEARCH);
         Log.d("", fragmentHome+"");
-//        if (fragmentSearch == null){
-//            fragmentTransaction = fragmentManager.beginTransaction();
-//            //ADD FRAGMENT
-//            fragmentHome = new FragmentHome();
-//            fragmentTransaction.replace(R.id.cl_contains_fragment,
-//                    fragmentHome, FRAGMENT_HOME);
-//            fragmentTransaction.addToBackStack(FRAGMENT_HOME);
-//        }
+
         if (fragmentSearch != null){
             finish();
         }
+
         else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStack();
             setDisplayEndNavOff();
             ivEndNavHome.setImageResource(R.drawable.ic_home_on);
         }
+
         Log.d("", fragmentHome+"");
-
-//        Log.d("VISIBLE: ", clChannelSearch.getVisibility()+"");
-    }
-
-    private void removeFragment() {
-        Fragment fragmentChannel = getSupportFragmentManager().findFragmentByTag(FRAGMENT_CHANNEL);
-        Fragment fragmentValueSearch = getSupportFragmentManager().findFragmentByTag(FRAGMENT_SEARCH);
-        if (fragmentChannel != null) {
-            getSupportFragmentManager().beginTransaction().remove(fragmentChannel).commit();
-        }
-        if (fragmentValueSearch != null) {
-            getSupportFragmentManager().beginTransaction().remove(fragmentValueSearch).commit();
-        }
     }
 
     public void setDisplayEndNavOff() {
@@ -350,6 +354,7 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
 
     @SuppressLint("WrongViewCast")
     public void mapping() {
+        clPlay = findViewById(R.id.cl_contains_play_video);
         clChannelSearch = findViewById(R.id.cl_contains_search);
         ivDataTrans = findViewById(R.id.iv_top_bar_connect_tv);
         ivUser = findViewById(R.id.iv_top_bar_user);
@@ -359,6 +364,22 @@ public class MainActivity extends AppCompatActivity implements InterfaceDefaultV
         ivEndNavSubscriptions = findViewById(R.id.iv_end_bar_subscriptions);
         ivEndNavLibrary = findViewById(R.id.iv_end_bar_library);
         ivEndNavNotification = findViewById(R.id.iv_end_bar_notifications);
+    }
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+        if (!b) {
+            ypPlayItemClick = youTubePlayer;
+            ypPlayItemClick.loadVideo(id);
+            Log.d("ID VIDEO: ", id);
+        }
+        Log.d("ID VIDEO: ", id);
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider,
+                                        YouTubeInitializationResult youTubeInitializationResult) {
+        Log.d("FALSE PLAY YOUTUBE: ", youTubeInitializationResult+"");
     }
 
 }

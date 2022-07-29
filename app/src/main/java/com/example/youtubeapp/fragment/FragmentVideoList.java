@@ -65,6 +65,7 @@ public class FragmentVideoList extends Fragment {
         ivLoadMore.setImageResource(R.drawable.gif_load_more);
 
         Log.d("ID LIST: ", itemListVideoInChannel.getIdList());
+
         DataDetailsVideoInList dataDetailsVideoInList = new DataDetailsVideoInList(itemListVideoInChannel.getIdList());
 
         tvNumberVideo.setText(itemListVideoInChannel.getNumberVideo() + " videos");

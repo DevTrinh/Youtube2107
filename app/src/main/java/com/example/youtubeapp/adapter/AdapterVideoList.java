@@ -1,6 +1,7 @@
 package com.example.youtubeapp.adapter;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ public class AdapterVideoList extends RecyclerView.Adapter<AdapterVideoList.Item
         holder.tvTitleChannel.setText(itemVideoInList.getTitleChannel());
         holder.tvTitleVideo.setText(itemVideoInList.getTitleVideo());
         Picasso.get().load(itemVideoInList.getUrlImage()).into(holder.ivVideo);
+        Log.d("SHIHI", itemVideoInList.getUrlImage());
         holder.clVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

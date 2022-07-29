@@ -1,16 +1,21 @@
 package com.example.youtubeapp.fragment;
 
+import static com.example.youtubeapp.MainActivity.btSheetPlay;
 import static com.example.youtubeapp.MainActivity.fragmentTransaction;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,13 +32,18 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.youtubeapp.ActivityPlayVideo;
+import com.example.youtubeapp.MainActivity;
 import com.example.youtubeapp.R;
 import com.example.youtubeapp.adapter.AdapterListHotKeys;
+import com.example.youtubeapp.adapter.AdapterMainVideo;
 import com.example.youtubeapp.adapter.AdapterMainVideoYoutube;
 import com.example.youtubeapp.interfacee.InterfaceClickFrame;
 import com.example.youtubeapp.interfacee.InterfaceClickWithString;
 import com.example.youtubeapp.interfacee.InterfaceDefaultValue;
+import com.example.youtubeapp.interfacee.InterfaceSenData;
 import com.example.youtubeapp.item.ItemVideoMain;
+import com.example.youtubeapp.item.ItemVideoMainn;
+import com.example.youtubeapp.json.DataSearchWithKey;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +53,7 @@ import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import pl.droidsonroids.gif.GifImageView;
@@ -54,14 +65,32 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
     private GifImageView pbLoadListVideoMain;
     private GifImageView ivLoadMore;
 
+    private InterfaceSenData interfaceSenData;
+
     public static AdapterListHotKeys adapterListHotKeys;
+
     public RecyclerView rvListVideoMain, rvListHotKeys;
     public static ArrayList<ItemVideoMain> listItemVideo = new ArrayList<>();
+    public static ArrayList<ItemVideoMainn> listVideoWithKey = new ArrayList<>();
     public static AdapterMainVideoYoutube adapterMainVideoYoutube;
+    public static AdapterMainVideo adapterMainVideo;
     public static String testUrlAvtChannel;
+    private TextView tvExplore;
+
+    public DataSearchWithKey dataSearchWithKey;
+
+    public String valueKeyClick = "";
 
     private int positionStart = 0, positionEnd = 12;
+
     private Fragment fragment = this;
+
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        interfaceSenData = (InterfaceSenData) context;
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @SuppressLint("NotifyDataSetChanged")
@@ -84,12 +113,74 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
                 new LinearLayoutManager(getContext(),
                         LinearLayoutManager.HORIZONTAL, false);
         rvListHotKeys.setLayoutManager(linearLayoutManagerHorizontal);
-        adapterListHotKeys = new AdapterListHotKeys(getListKey(), new InterfaceClickWithString() {
-            @Override
-            public void onClickWithString(String value) {
-                Toast.makeText(getContext(), value + "", Toast.LENGTH_SHORT).show();
-            }
-        });
+
+        adapterListHotKeys = new AdapterListHotKeys(getListKey(),
+                new InterfaceClickWithString() {
+                    @Override
+                    public void onClickWithString(String value) {
+                        Log.d("AHIHI", value);
+                        positionStart = 0;
+                        positionEnd = 12;
+                        listVideoWithKey.clear();
+                        listItemVideo.clear();
+                        adapterMainVideoYoutube.notifyDataSetChanged();
+
+                        ivLoadMore.setImageResource(R.drawable.gif_load_more);
+                        valueKeyClick = value;
+                        dataSearchWithKey = new DataSearchWithKey(valueKeyClick);
+
+                        adapterMainVideo = new AdapterMainVideo(listVideoWithKey,
+                                new InterfaceClickFrame() {
+                                    @Override
+                                    public void onClickTitle(int position) {
+
+                                    }
+
+                                    @Override
+                                    public void onClickImage(int position) {
+
+                                    }
+
+                                    @Override
+                                    public void onClickMenu(int position) {
+                                        FragmentMenuItemVideoMain fragmentMenuItemVideoMain =
+                                                new FragmentMenuItemVideoMain();
+                                        fragmentMenuItemVideoMain.show(getActivity()
+                                                .getSupportFragmentManager(), getTag());
+                                    }
+
+                                    @Override
+                                    public void onClickAvtChannel(int position) {
+                                        FragmentChannel fragmentChannel = (FragmentChannel) getActivity().getSupportFragmentManager().findFragmentByTag(FRAGMENT_CHANNEL);
+                                        fragmentTransaction =
+                                                getActivity().getSupportFragmentManager().beginTransaction();
+                                        fragmentChannel = new FragmentChannel(
+                                                listVideoWithKey.get(position).getIdChannel()
+                                                        + "", getActivity());
+                                        fragmentTransaction.add(R.id.cl_contains_search,
+                                                fragmentChannel, FRAGMENT_CHANNEL);
+                                        fragmentTransaction.addToBackStack(FRAGMENT_CHANNEL);
+                                        fragmentTransaction.commit();
+                                    }
+
+                                    @Override
+                                    public void onClickSubs(int position) {
+
+                                    }
+
+                                    @Override
+                                    public void onClickContains(int position) {
+
+                                    }
+                                });
+
+                        rvListVideoMain.setAdapter(adapterMainVideo);
+                        dataSearchWithKey.getData(getActivity(), listVideoWithKey,
+                                adapterMainVideo, positionStart,
+                                positionEnd, ivLoadMore);
+                    }
+                });
+
         rvListHotKeys.setAdapter(adapterListHotKeys);
         adapterListHotKeys.notifyDataSetChanged();
 
@@ -101,20 +192,22 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
                 new InterfaceClickFrame() {
                     @Override
                     public void onClickTitle(int position) {
-                        Intent intentMainToPlayVideo =
-                                new Intent(getContext(), ActivityPlayVideo.class);
-                        intentMainToPlayVideo.putExtra(VALUE_ITEM_VIDEO,
-                                listItemVideo.get(position));
-                        startActivity(intentMainToPlayVideo);
+//                        Intent intentMainToPlayVideo =
+//                                new Intent(getContext(), ActivityPlayVideo.class);
+//                        intentMainToPlayVideo.putExtra(VALUE_ITEM_VIDEO,
+//                                listItemVideo.get(position));
+//                        startActivity(intentMainToPlayVideo);
+                        MainActivity mainActivity = new MainActivity();
+                        mainActivity.playVideo(listItemVideo.get(position).getIdVideo());
                     }
 
                     @Override
                     public void onClickImage(int position) {
-                        Intent intentMainToPlayVideo =
-                                new Intent(getContext(), ActivityPlayVideo.class);
-                        intentMainToPlayVideo.putExtra(VALUE_ITEM_VIDEO,
-                                listItemVideo.get(position));
-                        startActivity(intentMainToPlayVideo);
+//                        Intent intentMainToPlayVideo =
+//                                new Intent(getContext(), ActivityPlayVideo.class);
+//                        intentMainToPlayVideo.putExtra(VALUE_ITEM_VIDEO,
+//                                listItemVideo.get(position));
+//                        startActivity(intentMainToPlayVideo);
                     }
 
                     @Override
@@ -131,13 +224,15 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
 //                        getActivity().getSupportFragmentManager().beginTransaction().remove(fragment).commit();
 
                         FragmentChannel fragmentChannel = (FragmentChannel) getActivity().getSupportFragmentManager().findFragmentByTag(FRAGMENT_CHANNEL);
-                            fragmentTransaction =
-                                    getActivity().getSupportFragmentManager().beginTransaction();
-                            fragmentChannel = new FragmentChannel(listItemVideo.get(position).getIdChannel() + "", getActivity());
-                            fragmentTransaction.add(R.id.cl_contains_search,
-                                    fragmentChannel, FRAGMENT_CHANNEL);
-                            fragmentTransaction.addToBackStack(FRAGMENT_CHANNEL);
-                            fragmentTransaction.commit();
+                        fragmentTransaction =
+                                getActivity().getSupportFragmentManager().beginTransaction();
+                        fragmentChannel = new FragmentChannel(
+                                listItemVideo.get(position).getIdChannel()
+                                        + "", getActivity());
+                        fragmentTransaction.add(R.id.cl_contains_search,
+                                fragmentChannel, FRAGMENT_CHANNEL);
+                        fragmentTransaction.addToBackStack(FRAGMENT_CHANNEL);
+                        fragmentTransaction.commit();
                     }
 
                     @Override
@@ -160,8 +255,33 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
                 positionStart = positionEnd;
                 positionEnd += 10;
                 ivLoadMore.setEnabled(false);
-                getJsonApiYoutube(positionStart, positionEnd);
+                if (listItemVideo.size() > 0) {
+                    getJsonApiYoutube(positionStart, positionEnd);
+                } else {
+                    dataSearchWithKey = new DataSearchWithKey(valueKeyClick);
+                    dataSearchWithKey.getData(getActivity(), listVideoWithKey,
+                            adapterMainVideo,
+                            positionStart, positionEnd, ivLoadMore);
+                }
 //                Log.d("LOAD DATA MORE: ", positionEnd+"");
+            }
+        });
+
+        tvExplore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (adapterMainVideo != null) {
+                    listItemVideo.clear();
+                    adapterMainVideo.notifyDataSetChanged();
+                }
+                if (adapterMainVideoYoutube != null) {
+                    listVideoWithKey.clear();
+                    adapterMainVideoYoutube.notifyDataSetChanged();
+                }
+                positionStart = 0;
+                positionEnd = 10;
+                rvListVideoMain.setAdapter(adapterMainVideoYoutube);
+                getJsonApiYoutube(positionStart, positionEnd);
             }
         });
 
@@ -170,7 +290,7 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
     }
 
     private void getJsonApiYoutube(int start, int end) {
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        RequestQueue requestQueue = Volley.newRequestQueue(requireActivity());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 API_YOUTUBE_MAIN_VIDEO, null,
                 new Response.Listener<JSONObject>() {
@@ -223,10 +343,9 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
                                     urlThumbnail = jsonStandard.getString(URL);
 //                                Log.d("THUMBNAIL "+i, urlThumbnail);
                                     JSONObject jsonStatistics = jsonItem.getJSONObject(STATISTICS);
-                                    if (jsonStatistics.has(VIEW_COUNT)){
+                                    if (jsonStatistics.has(VIEW_COUNT)) {
                                         viewCount = formatData(jsonStatistics.getInt(VIEW_COUNT)) + " views";
-                                    }
-                                    else{
+                                    } else {
                                         viewCount = " ";
                                     }
 //                                Log.d("View Count: "+i, viewCount);
@@ -260,7 +379,9 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
     }
 
     //    GET INFO URL CHANNEL, AMOUNT SUBSCRIBE
-    public void getInfoVideo(ArrayList<ItemVideoMain> list, String ID_CHANNEL, int position, boolean isLoad) {
+    public void getInfoVideo(ArrayList<ItemVideoMain> list,
+                             String ID_CHANNEL, int position,
+                             boolean isLoad) {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 "https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2Cstatistics&id="
@@ -268,6 +389,8 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
                 null, new Response.Listener<JSONObject>() {
             public void onResponse(JSONObject response) {
                 try {
+//                    Log.d("TAG", "https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2Cstatistics&id="
+//                    + ID_CHANNEL + "&key=" + API_KEY );
                     JSONArray jsonItems = response.getJSONArray(ITEMS);
                     JSONObject jsonItem = jsonItems.getJSONObject(0);
                     JSONObject jsonSnippet = jsonItem.getJSONObject(SNIPPET);
@@ -312,7 +435,7 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
         ArrayList<String> list = new ArrayList<>();
         list.add("All");
         list.add("Gaming");
-        list.add("Live");
+        list.add("Animal");
         list.add("Music");
         list.add("News");
         list.add("Soccer");
@@ -375,21 +498,28 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
         pbLoadListVideoMain = view.findViewById(R.id.pb_load_list_video_main);
         rvListHotKeys = view.findViewById(R.id.lv_hot_keywords);
         rvListVideoMain = view.findViewById(R.id.rv_list_video_main);
+        tvExplore = view.findViewById(R.id.tv_main_topic1);
 
     }
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh() {
+        ivLoadMore.setVisibility(View.GONE);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 rfMain.setRefreshing(false);
+                ivLoadMore.setVisibility(View.VISIBLE);
             }
+
         }, 2000);
         listItemVideo.clear();
+        positionStart = 0;
+        positionEnd = 10;
         getJsonApiYoutube(positionStart, positionEnd);
         adapterMainVideoYoutube.notifyDataSetChanged();
+
     }
 }

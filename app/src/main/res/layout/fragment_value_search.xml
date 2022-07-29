@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_nav_after_search"
         android:layout_width="match_parent"
@@ -109,5 +110,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    <FrameLayout
+        android:id="@+id/fr_home_contains_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

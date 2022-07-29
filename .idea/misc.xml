@@ -10,27 +10,32 @@
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/drawable/bg_mic.xml" value="0.1345" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/drawable/bg_notification_channel.xml" value="0.1345" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/drawable/bg_on_selected_key.xml" value="0.1345" />
+        <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/drawable/bg_topic_main_off_select.xml" value="0.2105" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/drawable/bg_topic_main_on_select.xml" value="0.1345" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/drawable/check_explore.xml" value="0.1345" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/drawable/check_home.xml" value="0.1345" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/drawable/check_library.xml" value="0.1345" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/drawable/custom_ripple.xml" value="0.183" />
-        <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/activity_main.xml" value="0.3522873022659256" />
+        <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/activity_play_video.xml" value="0.25" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/activity_search_video.xml" value="0.3522873022659256" />
+        <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/bottom_sheet_play_video.xml" value="0.20820863616930313" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/fragment_channel.xml" value="0.2" />
+        <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/fragment_channel_about.xml" value="0.3522873022659256" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/fragment_channel_community.xml" value="0.3394613082513895" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/fragment_channel_home.xml" value="0.3522873022659256" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/fragment_channel_playlist.xml" value="0.3522873022659256" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/fragment_channel_relate.xml" value="0.3394613082513895" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/fragment_channel_video.xml" value="0.2672082086361693" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/fragment_description_video.xml" value="0.1" />
-        <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/fragment_home.xml" value="0.4016477857878476" />
+        <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/fragment_home.xml" value="0.18" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/fragment_open_list.xml" value="0.25" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/fragment_value_search.xml" value="0.1" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/fragment_video_list.xml" value="0.3522873022659256" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/item_comment_video.xml" value="0.21675929884566053" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/item_history_search.xml" value="0.33" />
+        <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/item_hot_keywords.xml" value="0.3522873022659256" />
+        <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/item_hot_keywords2.xml" value="0.3522873022659256" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/item_list_channel.xml" value="0.3522873022659256" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/item_options_setting.xml" value="0.34782608695652173" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/item_suggest_search.xml" value="0.25" />
@@ -39,7 +44,7 @@
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/item_video.xml" value="0.34782608695652173" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/item_video_in_list.xml" value="0.3522873022659256" />
         <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/item_videos_channel.xml" value="0.34782608695652173" />
-        <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/layout_bottom_sheet_list_comment.xml" value="0.1" />
+        <entry key="..\:/JavaAndroid/Youtube2207/app/src/main/res/layout/layout_bottom_sheet_list_comment.xml" value="0.18" />
         <entry key="..\:/JavaAndroid/YoutubeApp/app/src/main/res/drawable/bg_notification_channel.xml" value="0.1455" />
         <entry key="..\:/JavaAndroid/YoutubeApp/app/src/main/res/drawable/bg_topic_main_off_select.xml" value="0.229" />
         <entry key="..\:/JavaAndroid/YoutubeApp/app/src/main/res/drawable/bg_topic_main_on_select.xml" value="0.3485" />

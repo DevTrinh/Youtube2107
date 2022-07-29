@@ -42,10 +42,12 @@ public class DataDetailsVideoInList implements InterfaceDefaultValue {
     public void getData(Context context, ArrayList<ItemVideoInList> list,
                         AdapterVideoList adapterVideoList, int start,
                         int end, GifImageView iv) {
+
         String url = PATH_API
                 + "playlistItems?part=snippet&maxResults=50&playlistId="
                 + getIdList() + "&key="
                 + API_KEY;
+
         Log.d("URL: ", url);
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
@@ -76,11 +78,13 @@ public class DataDetailsVideoInList implements InterfaceDefaultValue {
                             JSONObject jsonThumb = jsonSnippet.getJSONObject(THUMBNAIL);
                             JSONObject jsonHigh;
                             if (!jsonThumb.has(HIGH)){
-
+                                Log.d("AHIHI: ", "this is link !");
                             }
                             else {
+
                                 jsonHigh = jsonThumb.getJSONObject(HIGH);
                                 urlImage = jsonHigh.getString(URL);
+                                Log.d("AHIHI: "+ i, "this is link !"+urlImage);
                             }
                             titleChannel = jsonSnippet.getString(CHANNEL_TITLE);
                             JSONObject jsonResource = jsonSnippet.getJSONObject(RESOURCE_ID);
