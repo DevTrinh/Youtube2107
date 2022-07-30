@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1649039977",
+    "project_id": "spry-compound-357204",
+    "storage_bucket": "spry-compound-357204.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1649039977:android:0980a3e2add40eb93160f8",
+        "android_client_info": {
+          "package_name": "com.example.youtubeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1649039977-l1k7qtpbaah4pn1kb2ia5tff7janre1r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKyfdr7dRD75P8UuNbe3g0hM7t0H2PzkE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1649039977-l1k7qtpbaah4pn1kb2ia5tff7janre1r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

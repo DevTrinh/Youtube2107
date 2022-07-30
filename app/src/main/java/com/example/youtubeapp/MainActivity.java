@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements
                 setDisplayEndNavOff();
                 ivEndNavExplore.setImageResource(R.drawable.ic_explore_on);
                 FragmentExplore fragmentExplore = new FragmentExplore();
-                fragmentTransaction.add(R.id.cl_contains_fragment, fragmentExplore, FRAGMENT_EXPLORE);
+                fragmentTransaction.add(R.id.cl_contains_search, fragmentExplore, FRAGMENT_EXPLORE);
                 fragmentTransaction.addToBackStack(FRAGMENT_EXPLORE);
                 Toast.makeText(this, "Fragment Ex", Toast.LENGTH_SHORT).show();
                 break;

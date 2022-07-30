@@ -86,12 +86,6 @@ public class FragmentHome extends Fragment implements InterfaceDefaultValue,
     private Fragment fragment = this;
 
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        interfaceSenData = (InterfaceSenData) context;
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     @SuppressLint("NotifyDataSetChanged")
     public View onCreateView(@NonNull LayoutInflater inflater,

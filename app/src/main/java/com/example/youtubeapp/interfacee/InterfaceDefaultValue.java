@@ -32,6 +32,7 @@ public interface InterfaceDefaultValue {
     String UPLOADS  = "uploads";
     String RESOURCE_ID = "resourceId";
     String COUNTRY = "country";
+    String LINK = "links";
 
 
     String SUGGESTIONS = "suggestions";
@@ -93,6 +94,8 @@ public interface InterfaceDefaultValue {
     String VALUE = "value";
     String MAX_RES = "maxres";
 
+    String PATH_PLAY = "https://www.youtube.com/watch?v=";
     String PATH_API = "https://youtube.googleapis.com/youtube/v3/";
     String PATH_YOUTUBE_CHANNEL = "https://www.youtube.com/channel/";
+    String PATH_LINK_SHORT = "https://maadhav-ytdl.herokuapp.com/video_info.php?url=https://www.youtube.com/watch?v=";
 }
